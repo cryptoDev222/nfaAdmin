@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { Auth, Hub } from 'aws-amplify'
 import { useHistory, useLocation } from 'react-router'
 
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
@@ -7,10 +6,10 @@ import {
 	PieChart as DashbaordIcon,
 	ViewModule as SmartFormIcon,
 	ExitToApp as SignOutIcon,
-	Business as BusinessIcon,
-	AccountTree as DecisionIcon,
-	BusinessCenter as OrganisationIcon,
-	AccountCircle as AccountIcon,
+	AccountBalance as RewardsIcon,
+	History as HistoryIcon,
+	People as PeopleIcon,
+	Lock as TokenIcon,
 	Build as AdminIcon
 } from '@material-ui/icons'
 
@@ -27,17 +26,6 @@ const NavContent = () => {
 	const location = useLocation()
 
 	useEffect(() => {
-		Auth.currentAuthenticatedUser().then((authData) => {
-			const payload = authData.signInUserSession.idToken.payload
-			let internal = false
-			if (payload && payload['cognito:groups']) {
-				internal = payload['cognito:groups'].indexOf('internal') > -1
-				setIsInternal(internal)
-			}
-		})
-	}, [])
-
-	useEffect(() => {
 		const items = [
 			{
 				title: t('dashboard'),
@@ -46,28 +34,28 @@ const NavContent = () => {
 				exact: true
 			},
 			{
-				title: t('results'),
+				title: t('On Staking'),
 				icon: <SmartFormIcon fontSize="small" color={'inherit'} />,
 				path: '/results'
 			},
 			{
-				title: t('companies'),
-				icon: <BusinessIcon fontSize="small" color={'inherit'} />,
+				title: t('Rewards'),
+				icon: <RewardsIcon fontSize="small" color={'inherit'} />,
 				path: '/companies'
 			},
 			{
-				title: t('decisions'),
-				icon: <DecisionIcon fontSize="small" color={'inherit'} />,
+				title: t('Staking History'),
+				icon: <HistoryIcon fontSize="small" color={'inherit'} />,
 				path: '/decisions'
 			},
 			{
-				title: t('profile'),
-				icon: <AccountIcon fontSize="small" color={'inherit'} />,
+				title: t('Tokens'),
+				icon: <TokenIcon fontSize="small" color={'inherit'} />,
 				path: '/profile'
 			},
 			{
-				title: t('my_organisation'),
-				icon: <OrganisationIcon fontSize="small" color={'inherit'} />,
+				title: t('Users'),
+				icon: <PeopleIcon fontSize="small" color={'inherit'} />,
 				path: '/organisation'
 			}
 		]
@@ -84,22 +72,11 @@ const NavContent = () => {
 			title: t('sign_out'),
 			icon: <SignOutIcon fontSize="small" color={'inherit'} />,
 			onClick: () => {
-				Auth.signOut()
 				return false
 			}
 		})
 		setNavItems(items)
 	}, [isInternal])
-
-	Hub.listen('auth', (data) => {
-		switch (data.payload.event) {
-			case 'signOut':
-				history.push('/login')
-				break
-			default:
-				break
-		}
-	})
 
 	const goTo = (path) => {
 		history.push(path)

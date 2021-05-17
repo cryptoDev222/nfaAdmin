@@ -10,7 +10,7 @@ function FooterContent(props) {
 		<Fragment>
 			<div className={classes.root}>
 				<Typography variant="caption" align="center">
-					Enterpay @ 2020 All right reserved
+					NFA Admin @ 2021 All right reserved
 				</Typography>
 			</div>
 		</Fragment>
