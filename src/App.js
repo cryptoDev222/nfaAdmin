@@ -1,24 +1,22 @@
-import { BrowserRouter as Router } from 'react-router-dom'
-import { SnackbarProvider, LanguageProvider } from './context'
-import Snackbar from './components/shared/Snackbar'
+import { BrowserRouter as Router } from "react-router-dom";
+import { SnackbarProvider } from "./context";
+import Snackbar from "./components/shared/Snackbar";
 
-import AppRouter from './router'
-import AuthHelper from './utils/AuthHelper'
+import AppRouter from "./router";
+// import AuthHelper from './utils/AuthHelper'
 
 const App = () => {
-	return (
-		<LanguageProvider>
-			<SnackbarProvider>
-				<div className="App">
-					<Router>
-						<AuthHelper />
-						<AppRouter />
-					</Router>
-					<Snackbar />
-				</div>
-			</SnackbarProvider>
-		</LanguageProvider>
-	)
-}
+  return (
+    <SnackbarProvider>
+      <div className="App">
+        <Router>
+          {/* <AuthHelper /> */}
+          <AppRouter />
+        </Router>
+        <Snackbar />
+      </div>
+    </SnackbarProvider>
+  );
+};
 
-export default App
+export default App;

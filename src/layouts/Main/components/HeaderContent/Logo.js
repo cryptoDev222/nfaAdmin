@@ -1,9 +1,11 @@
-import { Link } from '@material-ui/core'
+import { Link, Typography } from '@material-ui/core'
 
 const Logo = () => {
 	return (
 		<Link href="/">
-			<img width={'150px'} src="/logo.png" alt={'Enterpay'} />
+			<Typography variant="h2">
+				NFA Admin
+			</Typography>
 		</Link>
 	)
 }

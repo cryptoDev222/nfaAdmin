@@ -10,8 +10,22 @@ const theme = createMuiTheme({
 			neutral: '#f4f5f7'
 		},
 		primary: {
-			contrastText: '#ffffff',
-			main: '#5664d2'
+			contrastText: 'white',
+			dark: colors.teal[900],
+			main: '#00b291',
+			light: '#78ffc0',
+		},
+		secondary: {
+			contrastText: 'white',
+			dark: colors.purple[900],
+			main: colors.purple['A400'],
+			light: '#f47af4',
+		},
+		third: {
+			contrastText: 'white',
+			dark: colors.orange[900],
+			main: colors.orange['A200'],
+			light: '#f4b964',
 		},
 		text: {
 			primary: '#172b4d',

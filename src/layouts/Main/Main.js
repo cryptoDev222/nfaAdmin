@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Toolbar from '@material-ui/core/Toolbar'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import styled from 'styled-components'
@@ -13,14 +13,12 @@ import Layout, {
 } from '@mui-treasury/layout'
 
 import { ThemeProvider } from '@material-ui/core/styles'
-import { LanguageContext } from '../../context'
 import { createLocalizedTheme } from '../../utils/theme'
 
 import HeaderContent from './components/HeaderContent'
 import FooterContent from './components/FooterContent'
 
 import NavContent from './components/NavContent'
-import NavHeader from './components/NavHeader'
 
 import useStyles from './Main.styles'
 import theme from '../../theme'
@@ -66,12 +64,11 @@ const Main = (props) => {
 	const { children } = props
 
 	const classes = useStyles()
-	const { language } = useContext(LanguageContext)
 
 	return (
 		<Root scheme={scheme} classes={classes.root}>
 			{({ state: { sidebar } }) => (
-				<ThemeProvider theme={() => createLocalizedTheme(theme, language)}>
+				<ThemeProvider theme={() => createLocalizedTheme(theme)}>
 					<CssBaseline />
 
 					<Box className={classes.rootBox}>

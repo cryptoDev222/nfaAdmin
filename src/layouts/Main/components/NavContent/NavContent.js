@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation } from 'react-router'
 
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
@@ -9,17 +8,14 @@ import {
 	AccountBalance as RewardsIcon,
 	History as HistoryIcon,
 	People as PeopleIcon,
-	Lock as TokenIcon,
-	Build as AdminIcon
+	Lock as TokenIcon
 } from '@material-ui/icons'
 
 import useStyles from './NavContent.styles'
 import { useEffect, useState } from 'react'
 
 const NavContent = () => {
-	const { t } = useTranslation()
 
-	const [isInternal, setIsInternal] = useState(false)
 	const [navItems, setNavItems] = useState([])
 
 	const history = useHistory()
@@ -28,55 +24,47 @@ const NavContent = () => {
 	useEffect(() => {
 		const items = [
 			{
-				title: t('dashboard'),
+				title: 'Dashboard',
 				icon: <DashbaordIcon fontSize="small" color={'inherit'} />,
 				path: '/',
 				exact: true
 			},
 			{
-				title: t('On Staking'),
+				title: 'On Staking',
 				icon: <SmartFormIcon fontSize="small" color={'inherit'} />,
 				path: '/results'
 			},
 			{
-				title: t('Rewards'),
+				title: 'Rewards',
 				icon: <RewardsIcon fontSize="small" color={'inherit'} />,
 				path: '/companies'
 			},
 			{
-				title: t('Staking History'),
+				title: 'Staking History',
 				icon: <HistoryIcon fontSize="small" color={'inherit'} />,
 				path: '/decisions'
 			},
 			{
-				title: t('Tokens'),
+				title: 'Tokens',
 				icon: <TokenIcon fontSize="small" color={'inherit'} />,
 				path: '/profile'
 			},
 			{
-				title: t('Users'),
+				title: 'Users',
 				icon: <PeopleIcon fontSize="small" color={'inherit'} />,
 				path: '/organisation'
 			}
 		]
 
-		if (isInternal) {
-			items.push({
-				title: t('admin'),
-				icon: <AdminIcon fontSize="small" color={'inherit'} />,
-				path: '/admin'
-			})
-		}
-
 		items.push({
-			title: t('sign_out'),
+			title: 'Sign_out',
 			icon: <SignOutIcon fontSize="small" color={'inherit'} />,
 			onClick: () => {
 				return false
 			}
 		})
 		setNavItems(items)
-	}, [isInternal])
+	}, [])
 
 	const goTo = (path) => {
 		history.push(path)

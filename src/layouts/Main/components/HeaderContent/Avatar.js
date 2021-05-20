@@ -1,5 +1,4 @@
-import { Auth } from 'aws-amplify'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router'
 
 import useStyles from './Avatar.styles'
@@ -23,21 +22,7 @@ const Avatar = () => {
 	const [avatarAnchorEl, setAvatarAnchorEl] = useState(null)
 	const profileMenuOpen = Boolean(avatarAnchorEl)
 
-	const [user, setUser] = useState({})
-
-	useEffect(() => {
-		async function loadUserInfo() {
-			Auth.currentUserInfo()
-				.then((userInfo) => {
-					setUser({
-						username: userInfo.username,
-						email: userInfo.attributes.email
-					})
-				})
-				.catch(() => {})
-		}
-		loadUserInfo()
-	}, [])
+	const user = {}
 
 	const handleAvatarClick = (event) => {
 		setAvatarAnchorEl(event.currentTarget)
@@ -49,11 +34,6 @@ const Avatar = () => {
 
 	const handleMyAccountClick = () => {
 		history.push('/profile')
-		handleProfileMenuClose()
-	}
-
-	const signOut = () => {
-		Auth.signOut()
 		handleProfileMenuClose()
 	}
 
@@ -107,7 +87,7 @@ const Avatar = () => {
 					</MenuItem>
 				</Box>
 				<Box p={2}>
-					<Button onClick={signOut} fullWidth variant="outlined" color="primary">
+					<Button fullWidth variant="outlined" color="primary">
 						Sign Out
 					</Button>
 				</Box>
