@@ -26,18 +26,18 @@ const NavContent = () => {
 			{
 				title: 'Dashboard',
 				icon: <DashbaordIcon fontSize="small" color={'inherit'} />,
-				path: '/',
+				path: '/admin',
 				exact: true
 			},
 			{
 				title: 'On Staking',
 				icon: <SmartFormIcon fontSize="small" color={'inherit'} />,
-				path: '/staking'
+				path: '/admin/staking'
 			},
 			{
 				title: 'Rewards',
 				icon: <RewardsIcon fontSize="small" color={'inherit'} />,
-				path: '/rewards'
+				path: '/admin/rewards'
 			},
 			{
 				title: 'Staking History',
@@ -56,13 +56,6 @@ const NavContent = () => {
 			}
 		]
 
-		items.push({
-			title: 'Sign_out',
-			icon: <SignOutIcon fontSize="small" color={'inherit'} />,
-			onClick: () => {
-				return false
-			}
-		})
 		setNavItems(items)
 	}, [])
 

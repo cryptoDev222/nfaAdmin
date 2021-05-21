@@ -6,16 +6,18 @@ import RouteWithLayout from './components/shared/RouteWithLayout'
 import Home from './Home'
 import Staking from './pages/staking'
 import Rewards from './pages/rewards'
-import Login from './Login'
+import NoPage from './pages/404'
+// import Login from './Login'
 
 const AppRouter = () => (
 	<Switch>
-		<Route exact path="/login" component={Login} />
-
-		<RouteWithLayout layout={Main} exact path="/" component={Home} />
-		<RouteWithLayout layout={Main} exact path="/staking" component={Staking} />
-		<RouteWithLayout layout={Main} exact path="/rewards" component={Rewards} />
-
+		{/* <Route exact path="/admin/login" component={Login} /> */}
+		<RouteWithLayout layout={Main} exact path="/admin/" component={Home} />
+		<RouteWithLayout layout={Main} exact path="/admin/staking" component={Staking} />
+		<RouteWithLayout layout={Main} exact path="/admin/rewards" component={Rewards} />
+		<Route>
+			<NoPage />
+		</Route>
 	</Switch>
 )
 
