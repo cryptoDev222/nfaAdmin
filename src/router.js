@@ -12,9 +12,9 @@ import NoPage from './pages/404'
 const AppRouter = () => (
 	<Switch>
 		{/* <Route exact path="/admin/login" component={Login} /> */}
-		<RouteWithLayout layout={Main} exact path="/admin/" component={Home} />
-		<RouteWithLayout layout={Main} exact path="/admin/staking" component={Staking} />
-		<RouteWithLayout layout={Main} exact path="/admin/rewards" component={Rewards} />
+		<RouteWithLayout layout={Main} exact path="/" component={Home} />
+		<RouteWithLayout layout={Main} exact path="/staking" component={Staking} />
+		<RouteWithLayout layout={Main} exact path="/rewards" component={Rewards} />
 		<Route>
 			<NoPage />
 		</Route>

@@ -9,7 +9,7 @@ const App = () => {
   return (
     <SnackbarProvider>
       <div className="App">
-        <Router>
+        <Router basename="/admin">
           {/* <AuthHelper /> */}
           <AppRouter />
         </Router>

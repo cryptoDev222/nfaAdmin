@@ -26,18 +26,18 @@ const NavContent = () => {
 			{
 				title: 'Dashboard',
 				icon: <DashbaordIcon fontSize="small" color={'inherit'} />,
-				path: '/admin',
+				path: '/',
 				exact: true
 			},
 			{
 				title: 'On Staking',
 				icon: <SmartFormIcon fontSize="small" color={'inherit'} />,
-				path: '/admin/staking'
+				path: '/staking'
 			},
 			{
 				title: 'Rewards',
 				icon: <RewardsIcon fontSize="small" color={'inherit'} />,
-				path: '/admin/rewards'
+				path: '/rewards'
 			},
 			{
 				title: 'Staking History',
