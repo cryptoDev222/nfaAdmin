@@ -1,6 +1,7 @@
 {
   "name": "dashboard-react",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.2",
@@ -27,7 +28,6 @@
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
-  "homepage": "./",
   "scripts": {
     "start": "PORT=4000 react-scripts start",
     "start:formatted": "npm run prettier:format && react-scripts start",
