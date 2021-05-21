@@ -19,7 +19,7 @@ const NoPage = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => history.push("/admin")}
+        onClick={() => history.push("/")}
       >
         Go to Home
       </Button>

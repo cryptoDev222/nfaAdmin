@@ -1,4 +1,5 @@
 /node_modules
 /build
+/admin
 .eslintcache
 .package-lock.json
