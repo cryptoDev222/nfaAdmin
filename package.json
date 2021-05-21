@@ -31,7 +31,7 @@
   "scripts": {
     "start": "PORT=4000 react-scripts start",
     "start:formatted": "npm run prettier:format && react-scripts start",
-    "build": "BUILD_PATH='./admin' react-scripts build",
+    "build": "react-scripts build && mv build admin",
     "build:test": "sh -ac '. .env.test; react-scripts build'",
     "build:staging": "sh -ac '. .env.staging; react-scripts build'",
     "test": "react-scripts test",
