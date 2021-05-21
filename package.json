@@ -28,7 +28,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=4000 react-scripts start",
     "start:formatted": "npm run prettier:format && react-scripts start",
     "build": "react-scripts build",
     "build:test": "sh -ac '. .env.test; react-scripts build'",
