@@ -42,18 +42,18 @@ const NavContent = () => {
 			{
 				title: 'Staking History',
 				icon: <HistoryIcon fontSize="small" color={'inherit'} />,
-				path: '/decisions'
+				path: '/history'
 			},
-			{
-				title: 'Tokens',
-				icon: <TokenIcon fontSize="small" color={'inherit'} />,
-				path: '/profile'
-			},
-			{
-				title: 'Users',
-				icon: <PeopleIcon fontSize="small" color={'inherit'} />,
-				path: '/organisation'
-			}
+			// {
+			// 	title: 'Tokens',
+			// 	icon: <TokenIcon fontSize="small" color={'inherit'} />,
+			// 	path: '/profile'
+			// },
+			// {
+			// 	title: 'Users',
+			// 	icon: <PeopleIcon fontSize="small" color={'inherit'} />,
+			// 	path: '/organisation'
+			// }
 		]
 
 		setNavItems(items)
