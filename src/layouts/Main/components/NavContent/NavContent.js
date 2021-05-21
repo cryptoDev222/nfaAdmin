@@ -32,12 +32,12 @@ const NavContent = () => {
 			{
 				title: 'On Staking',
 				icon: <SmartFormIcon fontSize="small" color={'inherit'} />,
-				path: '/results'
+				path: '/staking'
 			},
 			{
 				title: 'Rewards',
 				icon: <RewardsIcon fontSize="small" color={'inherit'} />,
-				path: '/companies'
+				path: '/rewards'
 			},
 			{
 				title: 'Staking History',
