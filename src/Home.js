@@ -1,5 +1,5 @@
 import "./Home.css";
-import React from "react";
+import React, { useEffect } from "react";
 import NFAStaked from "./components/NFAStaked";
 import {
   Grid,
@@ -20,8 +20,35 @@ import Accounts from "./assets/accounts.png";
 import theme from "./theme";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import axios from "axios";
+import { API_URL, CHAIN_ID } from "./config/constants";
 
 const Home = () => {
+  const [stakedList, setStakedList] = React.useState([]);
+  const [rewardsList, setRewardsList] = React.useState([]);
+  const [stakeHistory, setStakeHistory] = React.useState([]);
+  const [tokensForInitiate, setInitiateTokens] = React.useState([]);
+
+  useEffect(() => {
+    const params = { chainId: CHAIN_ID };
+
+    axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
+      setStakedList(data);
+    });
+
+    axios.get(API_URL + "/rewardsList", { params }).then(({ data }) => {
+      setRewardsList(data);
+    });
+
+    axios.get(API_URL + "/stakeHistory", { params }).then(({ data }) => {
+      setStakeHistory(data.splice(0, 5));
+    });
+
+    axios.get(API_URL + "/tokensForInitiate", { params }).then(({ data }) => {
+      setInitiateTokens(data);
+    });
+  }, []);
+
   const responsiveTheme = useTheme();
   const isMobile = useMediaQuery(responsiveTheme.breakpoints.down("sm"), {
     defaultMatches: true,
@@ -153,83 +180,36 @@ const Home = () => {
                   <TableCell align="left">Account</TableCell>
                   <TableCell align="left">Token</TableCell>
                   <TableCell align="left">Gender</TableCell>
-                  <TableCell align="left">Action</TableCell>
+                  <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">Female</TableCell>
-                  <TableCell align="left">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Initiate Baby
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">Female</TableCell>
-                  <TableCell align="left">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Initiate Baby
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">Female</TableCell>
-                  <TableCell align="left">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Initiate Baby
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">Female</TableCell>
-                  <TableCell align="left">
-                    <Button
-                      disabled
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Initiate Baby
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                {stakedList.map((data) => (
+                  <TableRow key={data.id}>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["account_id"]}
+                    </TableCell>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["token_id"]}
+                    </TableCell>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["gender"] === 1
+                        ? "Female"
+                        : data["gender"] === 2
+                        ? "Male"
+                        : "Baby"}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                      >
+                        Initiate Baby
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -250,46 +230,24 @@ const Home = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="left">Account</TableCell>
-                  <TableCell align="left">Baby</TableCell>
-                  <TableCell align="left">Reward</TableCell>
+                  <TableCell align="center">Baby</TableCell>
+                  <TableCell align="center">Reward</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">2</TableCell>
-                  <TableCell align="left">0.4ETH</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">2</TableCell>
-                  <TableCell align="left">0.4ETH</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">2</TableCell>
-                  <TableCell align="left">0.4ETH</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">2</TableCell>
-                  <TableCell align="left">0.4ETH</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left">2</TableCell>
-                  <TableCell align="left">0.4ETH</TableCell>
-                </TableRow>
+                {rewardsList.map((data) => (
+                  <TableRow key={data.id}>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["account_id"]}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["baby_count"]}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["eth_amount"] / Math.pow(10, 18)} ETH
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -319,30 +277,34 @@ const Home = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="left">Token</TableCell>
-                  <TableCell align="center">Traits</TableCell>
                   <TableCell align="center">Gender</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="center" className={classes.accountName}>
-                    8
-                  </TableCell>
-                  <TableCell align="center">Female</TableCell>
-                  <TableCell align="center">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Initiate
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                {tokensForInitiate.map((token, index) => (
+                  <TableRow key={index}>
+                    <TableCell align="left" className={classes.accountName}>
+                      {token["token_id"]}
+                    </TableCell>
+                    <TableCell align="center">
+                      {token["gender"] === 1
+                        ? "Female"
+                        : token["gender"] === 2
+                        ? "Male"
+                        : "Baby"}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                      >
+                        Initiate
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -371,56 +333,26 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="center">Female</TableCell>
-                  <TableCell align="center">2021-05-17</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="center">Female</TableCell>
-                  <TableCell align="center">2021-05-17</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="center">Female</TableCell>
-                  <TableCell align="center">2021-05-17</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="center">Female</TableCell>
-                  <TableCell align="center">2021-05-17</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    0xff45938223238435de9993434223442
-                  </TableCell>
-                  <TableCell align="center">Female</TableCell>
-                  <TableCell align="center">2021-05-17</TableCell>
-                </TableRow>
+                {stakeHistory.map((data) => (
+                  <TableRow key={data.id}>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["account_id"]}
+                    </TableCell>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["token_id"]}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["gender"] === 1
+                        ? "Female"
+                        : data["gender"] === 2
+                        ? "Male"
+                        : "Baby"}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["stake_date"].slice(0, 10)}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
