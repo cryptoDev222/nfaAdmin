@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL, CHAIN_ID } from "../../config/constants";
+
 import {
   Container,
   Paper,
@@ -17,6 +21,16 @@ import useStyles from "./rewards.style";
 const Rewards = () => {
   const classes = useStyles();
 
+  const [rewardsList, setRewardsList] = useState([]);
+
+  useEffect(() => {
+    const params = { chainId: CHAIN_ID };
+
+    axios.get(API_URL + "/rewardsList", { params }).then(({ data }) => {
+      setRewardsList(data);
+    });
+  }, []);
+
   return (
     <Container>
       <Paper elevation={0} className={classes.root}>
@@ -31,13 +45,19 @@ const Rewards = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="left" className={classes.accountName}>
-                  0xff45938223238435de9993434223442
-                </TableCell>
-                <TableCell align="center">2</TableCell>
-                <TableCell align="center">0.4ETH</TableCell>
-              </TableRow>
+              {rewardsList.map((data) => (
+                <TableRow key={data.id}>
+                  <TableCell align="left" className={classes.accountName}>
+                    {data["account_id"]}
+                  </TableCell>
+                  <TableCell align="center" className={classes.accountName}>
+                    {data["baby_count"]}
+                  </TableCell>
+                  <TableCell align="center" className={classes.accountName}>
+                    {data["eth_amount"] / Math.pow(10, 18)} ETH
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
             <TableFooter>
               <TableRow>

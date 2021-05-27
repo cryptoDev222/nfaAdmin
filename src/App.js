@@ -4,10 +4,14 @@ import Snackbar from "./components/shared/Snackbar";
 
 import AppRouter from "./router";
 
+import ContractHelper from './utils/ContractHelper'
+
 const App = () => {
+
   return (
     <SnackbarProvider>
       <ContractProvider>
+        <ContractHelper />
         <div className="App">
           <Router basename="/admin">
             {/* <AuthHelper /> */}

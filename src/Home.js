@@ -1,5 +1,6 @@
 import "./Home.css";
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import NFAStaked from "./components/NFAStaked";
 import {
   Grid,
@@ -28,6 +29,8 @@ const Home = () => {
   const [rewardsList, setRewardsList] = React.useState([]);
   const [stakeHistory, setStakeHistory] = React.useState([]);
   const [tokensForInitiate, setInitiateTokens] = React.useState([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     const params = { chainId: CHAIN_ID };
@@ -215,7 +218,11 @@ const Home = () => {
                 <TableRow>
                   <TableCell colSpan={4}>
                     <Grid container justify="center">
-                      <Button variant="outlined" color="primary">
+                      <Button
+                        onClick={() => history.push("/staking")}
+                        variant="outlined"
+                        color="primary"
+                      >
                         View All
                       </Button>
                     </Grid>
@@ -358,7 +365,11 @@ const Home = () => {
                 <TableRow>
                   <TableCell colSpan={4}>
                     <Grid container justify="center">
-                      <Button variant="outlined" color="primary">
+                      <Button
+                        onClick={() => history.push("/history")}
+                        variant="outlined"
+                        color="primary"
+                      >
                         View All
                       </Button>
                     </Grid>
