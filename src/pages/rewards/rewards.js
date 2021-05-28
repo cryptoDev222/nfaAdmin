@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { API_URL, CHAIN_ID } from "../../config/constants";
 
@@ -18,21 +18,59 @@ import {
 
 import useStyles from "./rewards.style";
 
+import InputModal from "../../components/modals/inputModal";
+import { ContractContext, SnackbarContext } from "../../context";
+
 const Rewards = () => {
   const classes = useStyles();
 
-  const [rewardsList, setRewardsList] = useState([]);
+  const { deposit, activateRewards, rewardsList } = useContext(ContractContext);
+  const { showMessage } = useContext(SnackbarContext);
 
-  useEffect(() => {
-    const params = { chainId: CHAIN_ID };
+  // Deposit Action part//
+  const [isDepositModal, setDepositModal] = useState(false);
 
-    axios.get(API_URL + "/rewardsList", { params }).then(({ data }) => {
-      setRewardsList(data);
-    });
-  }, []);
+  const confirmDeposit = (amount, setAmount) => {
+    if (isNaN(amount)) {
+      showMessage("Please insert correct value!", "error");
+      return;
+    }
+    deposit(amount);
+    setDepositModal(false);
+    setAmount("");
+  };
+  // /////////////////////
+
+  // Activat Action part//
+  const [isActivateModal, setActivateModal] = useState(false);
+
+  const confirmActivate = (amount, setAmount) => {
+    if (isNaN(amount)) {
+      showMessage("Please insert correct value!", "error");
+      return;
+    }
+    activateRewards(amount);
+    setActivateModal(false);
+    setAmount("");
+  };
+  // /////////////////////
 
   return (
     <Container>
+      <InputModal
+        title="Deposit Modal"
+        isOpen={isDepositModal}
+        desc="Deposit Amount"
+        handleClose={() => setDepositModal(false)}
+        confirmAction={confirmDeposit}
+      />
+      <InputModal
+        title="Activate Modal"
+        isOpen={isActivateModal}
+        desc="Activate Amount"
+        handleClose={() => setActivateModal(false)}
+        confirmAction={confirmActivate}
+      />
       <Paper elevation={0} className={classes.root}>
         <Grid container>
           <Typography variant="h3">Rewards</Typography>
@@ -54,7 +92,8 @@ const Rewards = () => {
                     {data["baby_count"]}
                   </TableCell>
                   <TableCell align="center" className={classes.accountName}>
-                    {data["eth_amount"] / Math.pow(10, 18)} ETH
+                    {(data["eth_amount"] / Math.pow(10, 18) + "").slice(0, 6)}{" "}
+                    ETH
                   </TableCell>
                 </TableRow>
               ))}
@@ -67,10 +106,15 @@ const Rewards = () => {
                       className={classes.mR12}
                       variant="outlined"
                       color="primary"
+                      onClick={() => setDepositModal(true)}
                     >
                       Deposit
                     </Button>
-                    <Button variant="outlined" color="primary">
+                    <Button
+                      variant="outlined"
+                      onClick={() => setActivateModal(true)}
+                      color="primary"
+                    >
                       Activate
                     </Button>
                   </Grid>

@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_URL, CHAIN_ID } from "../../config/constants";
+import { useState, useContext } from "react";
+import BabyModal from "../../components/modals/babyModal";
 
 import {
   Container,
@@ -13,26 +12,35 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TableFooter,
 } from "@material-ui/core";
 
 import useStyles from "./staking.style";
+import { ContractContext } from "../../context";
 
 const Staking = () => {
   const classes = useStyles();
 
-  const [stakedList, setStakedList] = useState([]);
+  const { stakedList, initiatedBabyCount } = useContext(ContractContext);
 
-  useEffect(() => {
-    const params = { chainId: CHAIN_ID };
+  // Initiate Baby Action part//
+  const [isBabyModal, setBabyModal] = useState(false);
+  const [motherID, setMotherID] = useState(null);
 
-    axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
-      setStakedList(data);
-    });
-  }, []);
+  const handleBabyModalOpen = (tokenId) => {
+    setMotherID(tokenId);
+    setBabyModal(true);
+  };
+  // ///////////////////////////
 
   return (
     <Container>
+      <BabyModal
+        title="Baby Modal"
+        isOpen={isBabyModal}
+        desc="Baby ID"
+        handleClose={() => setBabyModal(false)}
+        motherID={motherID}
+      />
       <Paper elevation={0} className={classes.root}>
         <Grid container>
           <Typography variant="h3">On Staking</Typography>
@@ -43,6 +51,7 @@ const Staking = () => {
                 <TableCell align="left">Token</TableCell>
                 <TableCell align="left">Gender</TableCell>
                 <TableCell align="center">Baby Count</TableCell>
+                <TableCell align="center">Initiated Baby Count</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
@@ -65,10 +74,17 @@ const Staking = () => {
                   <TableCell align="center" className={classes.accountName}>
                     {data["gender"] === 1 ? data["baby_count"] : ""}
                   </TableCell>
+                  <TableCell align="center" className={classes.accountName}>
+                    {initiatedBabyCount.hasOwnProperty(data["token_id"])
+                      ? initiatedBabyCount[data["token_id"]]
+                      : 0}
+                  </TableCell>
                   <TableCell align="center">
                     <Button
                       variant="contained"
                       color="primary"
+                      onClick={() => handleBabyModalOpen(data["token_id"])}
+                      disabled={data["gender"] !== 1}
                       className={classes.button}
                     >
                       Initiate Baby
@@ -76,18 +92,14 @@ const Staking = () => {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={5}>
-                  <Grid container justify="center">
-                    <Button variant="outlined" color="primary">
-                      Auto Initiate
-                    </Button>
-                  </Grid>
+              {stakedList.length === 0 ? (
+                <TableCell colSpan={6} align="center">
+                  There is no items on staking.
                 </TableCell>
-              </TableRow>
-            </TableFooter>
+              ) : (
+                ""
+              )}
+            </TableBody>
           </Table>
         </Grid>
       </Paper>

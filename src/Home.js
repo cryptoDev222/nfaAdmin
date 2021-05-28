@@ -1,5 +1,5 @@
 import "./Home.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import NFAStaked from "./components/NFAStaked";
 import {
@@ -24,33 +24,23 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import axios from "axios";
 import { API_URL, CHAIN_ID } from "./config/constants";
 
-const Home = () => {
-  const [stakedList, setStakedList] = React.useState([]);
-  const [rewardsList, setRewardsList] = React.useState([]);
-  const [stakeHistory, setStakeHistory] = React.useState([]);
-  const [tokensForInitiate, setInitiateTokens] = React.useState([]);
+import { ContractContext, SnackbarContext } from "./context";
+import InputModal from "./components/modals/inputModal";
+import BabyModal from "./components/modals/babyModal";
 
+const Home = () => {
   const history = useHistory();
 
-  useEffect(() => {
-    const params = { chainId: CHAIN_ID };
-
-    axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
-      setStakedList(data);
-    });
-
-    axios.get(API_URL + "/rewardsList", { params }).then(({ data }) => {
-      setRewardsList(data);
-    });
-
-    axios.get(API_URL + "/stakeHistory", { params }).then(({ data }) => {
-      setStakeHistory(data.splice(0, 5));
-    });
-
-    axios.get(API_URL + "/tokensForInitiate", { params }).then(({ data }) => {
-      setInitiateTokens(data);
-    });
-  }, []);
+  const {
+    initiateToken,
+    deposit,
+    activateRewards,
+    stakedList,
+    rewardsList,
+    stakeHistory,
+    tokensForInitiate,
+  } = useContext(ContractContext);
+  const { showMessage } = useContext(SnackbarContext);
 
   const responsiveTheme = useTheme();
   const isMobile = useMediaQuery(responsiveTheme.breakpoints.down("sm"), {
@@ -137,15 +127,74 @@ const Home = () => {
 
   const classes = useStyles();
 
+  // Deposit Action part//
+  const [isDepositModal, setDepositModal] = React.useState(false);
+
+  const confirmDeposit = (amount, setAmount) => {
+    if (isNaN(amount)) {
+      showMessage("Please insert correct value!", "error");
+      return;
+    }
+    deposit(amount);
+    setDepositModal(false);
+    setAmount("");
+  };
+  // /////////////////////
+
+  // Activat Action part//
+  const [isActivateModal, setActivateModal] = React.useState(false);
+
+  const confirmActivate = (amount, setAmount) => {
+    if (isNaN(amount)) {
+      showMessage("Please insert correct value!", "error");
+      return;
+    }
+    activateRewards(amount);
+    setActivateModal(false);
+    setAmount("");
+  };
+  // /////////////////////
+
+  // Initiate Baby Action part//
+  const [isBabyModal, setBabyModal] = React.useState(false);
+  const [motherID, setMotherID] = React.useState(null);
+
+  const handleBabyModalOpen = (tokenId) => {
+    setMotherID(tokenId);
+    setBabyModal(true);
+  };
+  // ///////////////////////////
+
   return (
     <Grid container justify="center">
+      <InputModal
+        title="Deposit Modal"
+        isOpen={isDepositModal}
+        desc="Deposit Amount"
+        handleClose={() => setDepositModal(false)}
+        confirmAction={confirmDeposit}
+      />
+      <InputModal
+        title="Activate Modal"
+        isOpen={isActivateModal}
+        desc="Activate Amount"
+        handleClose={() => setActivateModal(false)}
+        confirmAction={confirmActivate}
+      />
+      <BabyModal
+        title="Baby Modal"
+        isOpen={isBabyModal}
+        desc="Baby ID"
+        handleClose={() => setBabyModal(false)}
+        motherID={motherID}
+      />
       <Grid container className={classes.root}>
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
             <NFAStaked
               bgColor={theme.palette.secondary.light}
               imgSrc={Female}
-              count={5}
+              count={stakedList.length}
               text="Staking"
             />
           </Grid>
@@ -153,7 +202,7 @@ const Home = () => {
             <NFAStaked
               bgColor={theme.palette.primary.main}
               imgSrc={Male}
-              count={4}
+              count={stakeHistory.length}
               text="Total Staking"
             />
           </Grid>
@@ -169,13 +218,13 @@ const Home = () => {
             <NFAStaked
               bgColor={theme.palette.third.light}
               imgSrc={Accounts}
-              count={0}
+              count={rewardsList.length}
               text="Rewards"
             />
           </Grid>
         </Grid>
         <Grid container className={classes.mT20}>
-          <Grid className={classes.tableContainer} item md={6} sm={12}>
+          <Grid item md={6} sm={12}>
             <Typography variant="h3">On Staking</Typography>
             <Table>
               <TableHead>
@@ -187,7 +236,7 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {stakedList.map((data) => (
+                {stakedList.slice(0, 5).map((data) => (
                   <TableRow key={data.id}>
                     <TableCell align="left" className={classes.accountName}>
                       {data["account_id"]}
@@ -207,6 +256,8 @@ const Home = () => {
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        disabled={data["gender"] !== 1}
+                        onClick={() => handleBabyModalOpen(data["token_id"])}
                       >
                         Initiate Baby
                       </Button>
@@ -231,7 +282,7 @@ const Home = () => {
               </TableFooter>
             </Table>
           </Grid>
-          <Grid className={classes.tableContainer} item md={6} sm={12}>
+          <Grid item md={6} sm={12}>
             <Typography variant="h3">Rewards</Typography>
             <Table>
               <TableHead>
@@ -242,7 +293,7 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rewardsList.map((data) => (
+                {rewardsList.slice(0, 5).map((data) => (
                   <TableRow key={data.id}>
                     <TableCell align="left" className={classes.accountName}>
                       {data["account_id"]}
@@ -251,7 +302,8 @@ const Home = () => {
                       {data["baby_count"]}
                     </TableCell>
                     <TableCell align="center" className={classes.accountName}>
-                      {data["eth_amount"] / Math.pow(10, 18)} ETH
+                      {(data["eth_amount"] / Math.pow(10, 18) + "").slice(0, 6)}{" "}
+                      ETH
                     </TableCell>
                   </TableRow>
                 ))}
@@ -264,10 +316,15 @@ const Home = () => {
                         variant="outlined"
                         color="primary"
                         className={classes.mR12}
+                        onClick={() => setDepositModal(true)}
                       >
                         Deposit
                       </Button>
-                      <Button variant="outlined" color="primary">
+                      <Button
+                        onClick={() => setActivateModal(true)}
+                        variant="outlined"
+                        color="primary"
+                      >
                         Activate
                       </Button>
                     </Grid>
@@ -276,10 +333,10 @@ const Home = () => {
               </TableFooter>
             </Table>
           </Grid>
-          <Grid className={classes.tableContainer} item md={12} sm={12}>
             <Typography variant="h3" className={classes.mT20}>
               Initiate
             </Typography>
+            <Grid className={classes.tableContainer} item md={12} sm={12}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -306,6 +363,9 @@ const Home = () => {
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        onClick={() =>
+                          initiateToken(token["token_id"], token["gender"])
+                        }
                       >
                         Initiate
                       </Button>
@@ -326,10 +386,10 @@ const Home = () => {
               </TableFooter>
             </Table>
           </Grid>
+          <Typography className={classes.mT20} variant="h3">
+            Staking History
+          </Typography>
           <Grid className={classes.tableContainer} item md={12} sm={12}>
-            <Typography className={classes.mT20} variant="h3">
-              Staking History
-            </Typography>
             <Table>
               <TableHead>
                 <TableRow>
@@ -340,7 +400,7 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {stakeHistory.map((data) => (
+                {stakeHistory.slice(0, 5).map((data) => (
                   <TableRow key={data.id}>
                     <TableCell align="left" className={classes.accountName}>
                       {data["account_id"]}
@@ -356,7 +416,7 @@ const Home = () => {
                         : "Baby"}
                     </TableCell>
                     <TableCell align="center" className={classes.accountName}>
-                      {data["stake_date"].slice(0, 10)}
+                      {data["stake_date"]?.slice(0, 10)}
                     </TableCell>
                   </TableRow>
                 ))}

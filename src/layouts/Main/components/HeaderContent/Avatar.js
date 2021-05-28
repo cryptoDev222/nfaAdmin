@@ -33,7 +33,7 @@ const Avatar = () => {
 	}
 
 	const handleMyAccountClick = () => {
-		history.push('/profile')
+		// history.push('/profile')
 		handleProfileMenuClose()
 	}
 

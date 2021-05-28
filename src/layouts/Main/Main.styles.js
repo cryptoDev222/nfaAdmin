@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		display: 'flex',
 		flex: '1 1 auto',
-		overflow: 'hidden'
+		width: '100%',
+		position: 'relative',
 	},
 	rootBox: {
 		paddingTop: theme.spacing(8),
@@ -29,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	content: {
 		flex: '1 1 auto',
-		minHeight: '100%'
-		// overflow: 'auto'
+		minHeight: '100%',
+		width: '100%',
 	},
 	drawer: {
 		flexShrink: 0
