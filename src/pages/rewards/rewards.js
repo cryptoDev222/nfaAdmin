@@ -74,54 +74,56 @@ const Rewards = () => {
       <Paper elevation={0} className={classes.root}>
         <Grid container>
           <Typography variant="h3">Rewards</Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Account</TableCell>
-                <TableCell align="center">Baby Count</TableCell>
-                <TableCell align="center">ETH</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rewardsList.map((data) => (
-                <TableRow key={data.id}>
-                  <TableCell align="left" className={classes.accountName}>
-                    {data["account_id"]}
-                  </TableCell>
-                  <TableCell align="center" className={classes.accountName}>
-                    {data["baby_count"]}
-                  </TableCell>
-                  <TableCell align="center" className={classes.accountName}>
-                    {(data["eth_amount"] / Math.pow(10, 18) + "").slice(0, 6)}{" "}
-                    ETH
+          <Grid className={classes.tableContainer}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left">Account</TableCell>
+                  <TableCell align="center">Baby Count</TableCell>
+                  <TableCell align="center">ETH</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rewardsList.map((data) => (
+                  <TableRow key={data.id}>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["account_id"]}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["baby_count"]}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {(data["eth_amount"] / Math.pow(10, 18) + "").slice(0, 6)}{" "}
+                      ETH
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <Grid container justify="center">
+                      <Button
+                        className={classes.mR12}
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => setDepositModal(true)}
+                      >
+                        Deposit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={() => setActivateModal(true)}
+                        color="primary"
+                      >
+                        Activate
+                      </Button>
+                    </Grid>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <Grid container justify="center">
-                    <Button
-                      className={classes.mR12}
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => setDepositModal(true)}
-                    >
-                      Deposit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={() => setActivateModal(true)}
-                      color="primary"
-                    >
-                      Activate
-                    </Button>
-                  </Grid>
-                </TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table>
+              </TableFooter>
+            </Table>
+          </Grid>
         </Grid>
       </Paper>
     </Container>

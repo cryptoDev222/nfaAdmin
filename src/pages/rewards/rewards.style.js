@@ -22,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
   mR12: {
     marginRight: '12px',
   },
+  tableContainer: {
+    width: "100%",
+    position: "relative",
+    overflow: "auto",
+    padding: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

@@ -36,38 +36,40 @@ const StakingHistory = () => {
       <Paper elevation={0} className={classes.root}>
         <Grid container>
           <Typography variant="h3">Staking History</Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Account</TableCell>
-                <TableCell align="left">Token</TableCell>
-                <TableCell align="center">Gender</TableCell>
-                <TableCell align="center">Date</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {stakeHistory.map((data) => (
-                <TableRow key={data.id}>
-                  <TableCell align="left" className={classes.accountName}>
-                    {data["account_id"]}
-                  </TableCell>
-                  <TableCell align="left" className={classes.accountName}>
-                    {data["token_id"]}
-                  </TableCell>
-                  <TableCell align="center" className={classes.accountName}>
-                    {data["gender"] === 1
-                      ? "Female"
-                      : data["gender"] === 2
-                      ? "Male"
-                      : "Baby"}
-                  </TableCell>
-                  <TableCell align="center" className={classes.accountName}>
-                    {data["stake_date"]?.slice(0, 10)}
-                  </TableCell>
+          <Grid className={classes.tableContainer}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left">Account</TableCell>
+                  <TableCell align="left">Token</TableCell>
+                  <TableCell align="center">Gender</TableCell>
+                  <TableCell align="center">Date</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {stakeHistory.map((data) => (
+                  <TableRow key={data.id}>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["account_id"]}
+                    </TableCell>
+                    <TableCell align="left" className={classes.accountName}>
+                      {data["token_id"]}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["gender"] === 1
+                        ? "Female"
+                        : data["gender"] === 2
+                        ? "Male"
+                        : "Baby"}
+                    </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data["stake_date"]?.slice(0, 10)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Grid>
         </Grid>
       </Paper>
     </Container>

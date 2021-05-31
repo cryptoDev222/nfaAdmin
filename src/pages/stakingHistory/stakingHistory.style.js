@@ -19,6 +19,12 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
+  tableContainer: {
+    width: "100%",
+    position: "relative",
+    overflow: "auto",
+    padding: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

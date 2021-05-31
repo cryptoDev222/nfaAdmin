@@ -14,7 +14,12 @@ const useStyles = makeStyles((theme) => ({
 		overflow: 'hidden',
 		paddingTop: theme.spacing(4),
 		paddingLeft: theme.spacing(3),
-		paddingRight: theme.spacing(3)
+		paddingRight: theme.spacing(3),
+		[theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+			paddingLeft: theme.spacing(1),
+			paddingRight: theme.spacing(1),
+    }
 	},
 	container: {
 		display: 'flex',
