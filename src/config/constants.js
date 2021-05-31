@@ -31,4 +31,5 @@ export const CHAIN_ID = '0x4'
 // export const CHAIN_ID = "0x539";
 
 // API SERVER ADDRESS
-export const API_ADDRESS = "http://localhost:8000/api/";
+export const API_ADDRESS = "http://app.nonfungibleapes.wtf/api/";
+// export const API_ADDRESS = "http://localhost:8000/api/";
