@@ -7,8 +7,6 @@ export const ORDER_DIRS = {
 
 export const PAGE_SIZE = 5;
 
-export const API_URL = "http://localhost:8000/api";
-
 // RINKEBY API ADDRESS MY
 export const API_URL_BEFORE = "https://rinkeby-api.opensea.io/api/v1/assets?owner="
 export const API_URL_AFTER = "&asset_contract_address=0x42f8666e87e509258e272d7c233cde11af78a8b1&order_direction=desc&offset=0&limit=50"
@@ -30,6 +28,6 @@ export const CHAIN_ID = '0x4'
 // export const API_URL_AFTER = "&chainId=0x539";
 // export const CHAIN_ID = "0x539";
 
-// API SERVER ADDRESS
-export const API_ADDRESS = "http://app.nonfungibleapes.wtf/api/";
-// export const API_ADDRESS = "http://localhost:8000/api/";
+// API SERVER URL
+export const API_URL = "http://app.nonfungibleapes.wtf/api/";
+// export const API_URL = "http://localhost:8000/api/";
