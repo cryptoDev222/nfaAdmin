@@ -223,68 +223,70 @@ const Home = () => {
             />
           </Grid>
         </Grid>
-        <Grid container className={classes.mT20}>
-          <Grid item md={6} sm={12}>
-            <Typography variant="h3">On Staking</Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Account</TableCell>
-                  <TableCell align="left">Token</TableCell>
-                  <TableCell align="left">Gender</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {stakedList.slice(0, 5).map((data) => (
-                  <TableRow key={data.id}>
-                    <TableCell align="left" className={classes.accountName}>
-                      {data["account_id"]}
-                    </TableCell>
-                    <TableCell align="left" className={classes.accountName}>
-                      {data["token_id"]}
-                    </TableCell>
-                    <TableCell align="left" className={classes.accountName}>
-                      {data["gender"] === 1
-                        ? "Female"
-                        : data["gender"] === 2
-                        ? "Male"
-                        : "Baby"}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        disabled={data["gender"] !== 1}
-                        onClick={() => handleBabyModalOpen(data["token_id"])}
-                      >
-                        Initiate Baby
-                      </Button>
+        <Grid container>
+          <Grid item md={6} sm={12} xs={12}>
+            <Typography className={classes.mT20} variant="h3">On Staking</Typography>
+            <Grid className={classes.tableContainer}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Account</TableCell>
+                    <TableCell align="left">Token</TableCell>
+                    <TableCell align="left">Gender</TableCell>
+                    <TableCell align="center">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {stakedList.slice(0, 5).map((data) => (
+                    <TableRow key={data.id}>
+                      <TableCell align="left" className={classes.accountName}>
+                        {data["account_id"]}
+                      </TableCell>
+                      <TableCell align="left" className={classes.accountName}>
+                        {data["token_id"]}
+                      </TableCell>
+                      <TableCell align="left" className={classes.accountName}>
+                        {data["gender"] === 1
+                          ? "Female"
+                          : data["gender"] === 2
+                          ? "Male"
+                          : "Baby"}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          disabled={data["gender"] !== 1}
+                          onClick={() => handleBabyModalOpen(data["token_id"])}
+                        >
+                          Initiate Baby
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <Grid container justify="center">
+                        <Button
+                          onClick={() => history.push("/staking")}
+                          variant="outlined"
+                          color="primary"
+                        >
+                          View All
+                        </Button>
+                      </Grid>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={4}>
-                    <Grid container justify="center">
-                      <Button
-                        onClick={() => history.push("/staking")}
-                        variant="outlined"
-                        color="primary"
-                      >
-                        View All
-                      </Button>
-                    </Grid>
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
+                </TableFooter>
+              </Table>
+            </Grid>
           </Grid>
-          <Grid item md={6} sm={12}>
-            <Typography variant="h3">Rewards</Typography>
-            <Table>
+          <Grid item md={6} sm={12} xs={12}>
+            <Typography className={classes.mT20} variant="h3">Rewards</Typography>
+            <Table fullWidth>
               <TableHead>
                 <TableRow>
                   <TableCell align="left">Account</TableCell>
@@ -333,10 +335,12 @@ const Home = () => {
               </TableFooter>
             </Table>
           </Grid>
+          <Grid item md={12} sm={12} lg={12} xs={12}>
             <Typography variant="h3" className={classes.mT20}>
               Initiate
             </Typography>
-            <Grid className={classes.tableContainer} item md={12} sm={12}>
+          </Grid>
+          <Grid className={classes.tableContainer} item md={12} sm={12}>
             <Table>
               <TableHead>
                 <TableRow>
