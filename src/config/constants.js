@@ -29,5 +29,5 @@ export const CHAIN_ID = '0x4'
 // export const CHAIN_ID = "0x539";
 
 // API SERVER URL
-export const API_URL = "http://app.nonfungibleapes.wtf/api/";
+export const API_URL = "https://app.nonfungibleapes.wtf/api/";
 // export const API_URL = "http://localhost:8000/api/";
