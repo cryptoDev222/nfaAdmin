@@ -186,8 +186,10 @@ export const ContractProvider = ({ children }) => {
       return;
     }
 
+    amount = Web3.utils.toWei(amount, "ether");
+
     stakingPool.methods
-      .notifyRewardAmount(amount * 1000000000000000)
+      .notifyRewardAmount(amount)
       .send({ from: account })
       .then((data) => {
         console.log(data);
