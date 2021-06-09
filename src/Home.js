@@ -1,5 +1,5 @@
 import "./Home.css";
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import NFAStaked from "./components/NFAStaked";
 import {
@@ -21,12 +21,11 @@ import Accounts from "./assets/accounts.png";
 import theme from "./theme";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import axios from "axios";
-import { API_URL, CHAIN_ID } from "./config/constants";
 
 import { ContractContext, SnackbarContext } from "./context";
 import InputModal from "./components/modals/inputModal";
 import BabyModal from "./components/modals/babyModal";
+import TokenModal from "./components/modals/tokenModal";
 
 const Home = () => {
   const history = useHistory();
@@ -165,6 +164,16 @@ const Home = () => {
   };
   // ///////////////////////////
 
+  const [isTokenInitiateModal, setInitiateTokenModal] = React.useState(false);
+  const [initiateTokenID, setInitiateTokenID] = React.useState(null);
+
+  const handleTokenInitiateModalOpen = (tokenId) => {
+    setInitiateTokenID(tokenId);
+    setInitiateTokenModal(true);
+  };
+
+  // Initiate Token Action part//
+
   return (
     <Grid container justify="center">
       <InputModal
@@ -188,6 +197,13 @@ const Home = () => {
         handleClose={() => setBabyModal(false)}
         motherID={motherID}
       />
+      <TokenModal
+        title="Token Initiate Modal"
+        isOpen={isTokenInitiateModal}
+        desc="Class Name"
+        handleClose={() => setInitiateTokenModal(false)}
+        tokenID={initiateTokenID}
+      />
       <Grid container className={classes.root}>
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
@@ -210,22 +226,24 @@ const Home = () => {
             <NFAStaked
               bgColor={theme.palette.primary.light}
               imgSrc={BabyCyan}
-              count={11}
-              text="Required BABIES"
+              count={rewardsList.length}
+              text="Rewards"
             />
           </Grid>
           <Grid className={classes.padding6} item xs={12} sm={6} md={3}>
             <NFAStaked
               bgColor={theme.palette.third.light}
               imgSrc={Accounts}
-              count={rewardsList.length}
-              text="Rewards"
+              count={tokensForInitiate.length}
+              text="Tokens For Initiate"
             />
           </Grid>
         </Grid>
         <Grid container>
           <Grid item md={6} sm={12} xs={12}>
-            <Typography className={classes.mT20} variant="h3">On Staking</Typography>
+            <Typography className={classes.mT20} variant="h3">
+              On Staking
+            </Typography>
             <Grid className={classes.tableContainer}>
               <Table>
                 <TableHead>
@@ -285,8 +303,10 @@ const Home = () => {
             </Grid>
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
-            <Typography className={classes.mT20} variant="h3">Rewards</Typography>
-            <Table fullWidth>
+            <Typography className={classes.mT20} variant="h3">
+              Rewards
+            </Typography>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell align="left">Account</TableCell>
@@ -346,6 +366,7 @@ const Home = () => {
                 <TableRow>
                   <TableCell align="left">Token</TableCell>
                   <TableCell align="center">Gender</TableCell>
+                  <TableCell align="center">Traits</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -353,7 +374,9 @@ const Home = () => {
                 {tokensForInitiate.map((token, index) => (
                   <TableRow key={index}>
                     <TableCell align="left" className={classes.accountName}>
-                      {token["token_id"]}
+                      {token["name"] && token["name"] !== "null"
+                        ? token["name"]
+                        : "NFA# " + token["token_id"]}
                     </TableCell>
                     <TableCell align="center">
                       {token["gender"] === 1
@@ -362,13 +385,14 @@ const Home = () => {
                         ? "Male"
                         : "Baby"}
                     </TableCell>
+                    <TableCell align="center">{token["traits"]}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"
                         color="primary"
                         className={classes.button}
                         onClick={() =>
-                          initiateToken(token["token_id"], token["gender"])
+                          handleTokenInitiateModalOpen(token["token_id"])
                         }
                       >
                         Initiate
@@ -377,17 +401,6 @@ const Home = () => {
                   </TableRow>
                 ))}
               </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={4}>
-                    <Grid container justify="center">
-                      <Button variant="outlined" color="primary">
-                        View All
-                      </Button>
-                    </Grid>
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
             </Table>
           </Grid>
           <Typography className={classes.mT20} variant="h3">

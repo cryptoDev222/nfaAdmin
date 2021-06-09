@@ -5,6 +5,7 @@ import RouteWithLayout from "./components/shared/RouteWithLayout";
 
 import Home from "./Home";
 import Staking from "./pages/staking";
+import Tokens from "./pages/tokens";
 import StakingHistory from "./pages/stakingHistory";
 import Rewards from "./pages/rewards";
 import NoPage from "./pages/404";
@@ -22,6 +23,7 @@ const AppRouter = () => (
       component={StakingHistory}
     />
     <RouteWithLayout layout={Main} exact path="/rewards" component={Rewards} />
+    <RouteWithLayout layout={Main} exact path="/tokens" component={Tokens} />
     <Route>
       <NoPage />
     </Route>

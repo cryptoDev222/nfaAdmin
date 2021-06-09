@@ -56,6 +56,7 @@ const InputModal = ({ isOpen, handleClose, confirmAction, title, desc }) => {
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
+      width: "calc(100% - 16px)",
     },
   }));
 
@@ -79,10 +80,16 @@ const InputModal = ({ isOpen, handleClose, confirmAction, title, desc }) => {
           container
           direction="column"
           justify="center"
+          alignItems="center"
           className={classes.modalContainer}
         >
-          <TextField onChange={handleChange} value={descValue} label={desc} />
-          <Grid container justify="center">
+          <TextField
+            onChange={handleChange}
+            value={descValue}
+            label={desc}
+            className={classes.formControl}
+          />
+          <Grid item>
             <Button
               variant="contained"
               className={`${classes.button} ${classes.requestBtn}`}

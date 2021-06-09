@@ -7,8 +7,7 @@ import {
 	ExitToApp as SignOutIcon,
 	AccountBalance as RewardsIcon,
 	History as HistoryIcon,
-	People as PeopleIcon,
-	Lock as TokenIcon
+	People as TokenIcon,
 } from '@material-ui/icons'
 
 import useStyles from './NavContent.styles'
@@ -38,6 +37,11 @@ const NavContent = () => {
 				title: 'Rewards',
 				icon: <RewardsIcon fontSize="small" color={'inherit'} />,
 				path: '/rewards'
+			},
+			{
+				title: 'Tokens',
+				icon: <TokenIcon fontSize="small" color={'inherit'} />,
+				path: '/tokens'
 			},
 			{
 				title: 'Staking History',

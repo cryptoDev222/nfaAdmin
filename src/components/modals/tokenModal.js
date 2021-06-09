@@ -17,7 +17,7 @@ import { CHAIN_ID, API_URL } from "../../config/constants";
 
 import { ContractContext } from "../../context";
 
-const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
+const TokenModal = ({ isOpen, handleClose, title, tokenID }) => {
   const responsiveTheme = useTheme();
 
   const isMobile = useMediaQuery(responsiveTheme.breakpoints.down("sm"), {
@@ -57,6 +57,9 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
     mR12: {
       marginRight: "12px",
     },
+    mT20: {
+      marginTop: "20px",
+    },
     requestBtn: {
       width: "fit-content",
     },
@@ -69,42 +72,34 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
 
   const classes = useStyles();
 
-  const [descValue, setDescValue] = useState("");
+  const [classValue, setClassValue] = useState(1);
 
-  const [babies, setBabies] = useState([]);
+  const [token, setToken] = useState(null);
 
-  const { initiateBaby } = useContext(ContractContext);
+  const { initiateToken } = useContext(ContractContext);
 
   useEffect(() => {
     const params = { chainId: CHAIN_ID };
-    axios
-      .get(API_URL + "/getBabiesForInitiate", { params })
-      .then(({ data }) => {
-        setBabies(data);
-        setDescValue(data[0]?.token_id);
-      });
-    setInterval(() => {
-      axios
-        .get(API_URL + "/getBabiesForInitiate", { params })
-        .then(({ data }) => {
-          setBabies(data);
-          setDescValue(data[0]?.token_id);
-        });
-    }, 60000);
-  }, []);
+    axios.get(API_URL + `/tokens/${tokenID}`, { params }).then(({ data }) => {
+      setToken(data[0]);
+    });
+  }, [tokenID]);
 
   const handleChange = (e) => {
-    setDescValue(e.target.value);
+    setClassValue(e.target.value);
   };
 
   const handleConfirm = () => {
-    setBabies((babies) => {
-      return babies.filter((baby) => baby.token_id != descValue);
-    });
-    setDescValue("");
-    initiateBaby(motherID, descValue);
+    initiateToken(tokenID, token["gender"], classValue);
     handleClose();
+    setClassValue(1);
   };
+
+  const classList = [
+    { label: "Class #1", value: 1 },
+    { label: "Class #2", value: 2 },
+    { label: "Class #3", value: 3 },
+  ];
 
   return (
     <Modal open={isOpen} onClose={handleClose} className={classes.modal}>
@@ -112,21 +107,27 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
         <Typography variant="h4">{title}</Typography>
         <Grid
           container
-          alignItems="center"
           direction="column"
+          alignItems="center"
           className={classes.modalContainer}
         >
+          <Typography variant="h5" className={classes.mT20}>
+            Token Name:{" "}
+            {token?.name && token?.name !== "null"
+              ? token?.name
+              : "NFA# " + tokenID}
+          </Typography>
           <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">Baby ID</InputLabel>
+            <InputLabel id="demo-simple-select-label">Select Class</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={descValue}
+              value={classValue}
               onChange={handleChange}
             >
-              {babies.map((baby, index) => (
-                <MenuItem key={index} value={baby["token_id"]}>
-                  {baby["token_id"]}
+              {classList.map((classInfo, index) => (
+                <MenuItem key={index} value={classInfo["value"]}>
+                  {classInfo["label"]}
                 </MenuItem>
               ))}
             </Select>
@@ -147,4 +148,4 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
   );
 };
 
-export default BabyModal;
+export default TokenModal;

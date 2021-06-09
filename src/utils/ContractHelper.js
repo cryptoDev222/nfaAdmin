@@ -10,7 +10,8 @@ const ContractHelper = () => {
     setRewardsList,
     setStakeHistory,
     setInitiateTokens,
-    setInitiatedBabyCount
+    setInitiatedBabyCount,
+    setTokens
   } = useContext(ContractContext);
 
   useEffect(() => {
@@ -71,6 +72,16 @@ const ContractHelper = () => {
     setInterval(() => {
       axios.get(API_URL + "/tokensForInitiate", { params }).then(({ data }) => {
         setInitiateTokens(data);
+      });
+    }, 60000);
+
+    axios.get(API_URL + "/allTokens", { params }).then(({ data }) => {
+      setTokens(data);
+    });
+
+    setInterval(() => {
+      axios.get(API_URL + "/allTokens", { params }).then(({ data }) => {
+        setTokens(data);
       });
     }, 60000);
   }, []);

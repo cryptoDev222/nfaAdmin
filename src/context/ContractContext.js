@@ -4,7 +4,12 @@ import Web3 from "web3";
 import { CHAIN_ID, API_URL } from "../config/constants";
 import { SnackbarContext } from "./SnackbarContext";
 
-import { APETOKEN_ADDRESS, STAKINGPOOL_ADDRESS } from "../config/constants";
+import {
+  APETOKEN_ADDRESS,
+  STAKINGPOOL_ADDRESS,
+  API_URL_AFTER,
+  API_URL_BEFORE,
+} from "../config/constants";
 
 import Apetoken from "../abis/ApeToken.json";
 import Stakingpool from "../abis/StakingPool.json";
@@ -30,6 +35,7 @@ export const ContractProvider = ({ children }) => {
   const [rewardsList, setRewardsList] = useState([]);
   const [stakeHistory, setStakeHistory] = useState([]);
   const [tokensForInitiate, setInitiateTokens] = useState([]);
+  const [tokens, setTokens] = useState([]);
   const [initiatedBabyCount, setInitiatedBabyCount] = useState({});
   // ///////////////
 
@@ -100,14 +106,14 @@ export const ContractProvider = ({ children }) => {
 
     // Load contracts
     try {
-      setApeToken(new web3.eth.Contract(Apetoken.abi, APETOKEN_ADDRESS));
+      setApeToken(new web3.eth.Contract(Apetoken, APETOKEN_ADDRESS));
     } catch (err) {
       console.log(err);
       setApeToken(null);
     }
 
     try {
-      const pool = new web3.eth.Contract(Stakingpool.abi, STAKINGPOOL_ADDRESS);
+      const pool = new web3.eth.Contract(Stakingpool, STAKINGPOOL_ADDRESS);
       setStakingPool(pool);
     } catch (err) {
       console.log(err);
@@ -115,6 +121,90 @@ export const ContractProvider = ({ children }) => {
     }
 
     setAccount(accounts[0]);
+
+    syncData(0, accounts[0]);
+  };
+
+  const syncData = (offset, account) => {
+    const url = API_URL_BEFORE + offset + API_URL_AFTER;
+
+    axios
+      .get(url)
+      .then(function (response) {
+        // handle success
+        let data = response.data.assets;
+        let token_ids = [];
+        data.forEach((value) => {
+          token_ids.push(value.token_id);
+        });
+
+        axios
+          .put(API_URL + "tokensFromID", {
+            ids: token_ids,
+            chainId: window.ethereum.chainId,
+          }) //sync tokes list
+          .then((response) => {
+            let ids = response.data.ids;
+            const forEach = (_) => {
+              let addData = [];
+              data.forEach((oneData) => {
+                if (ids.includes(oneData["token_id"])) {
+                  if (
+                    oneData.hasOwnProperty("traits") &&
+                    oneData["traits"].hasOwnProperty("gender")
+                  ) {
+                    let traits = oneData.traits;
+                    if (traits.length > 0) {
+                      for (let i = 0; i < traits.length; i++) {
+                        if (traits[i]["trait_type"] === "Gender") {
+                          switch (traits[i].oneData) {
+                            case "Male":
+                              oneData["gender"] = 2;
+                              break;
+                            case "Female":
+                              oneData["gender"] = 1;
+                              break;
+                            default:
+                              oneData["gender"] = 3;
+                          }
+                        }
+                      }
+                    }
+                  } else {
+                    oneData["gender"] = (oneData["id"] % 3) + 1; // for RINKEBY
+                  }
+
+                  addData.push({
+                    name: oneData["name"],
+                    token_id: oneData["token_id"],
+                    gender: oneData["gender"],
+                    traits: oneData["traits"].length,
+                    chainId: window.ethereum.chainId,
+                  });
+                }
+              });
+
+              console.log(addData);
+
+              axios
+                .post(API_URL + "createtokens", { addData, account })
+                .then((data) => {});
+
+              if (data.length === 50) {
+                syncData(offset + 50, account);
+              }
+            };
+
+            forEach();
+          });
+        // //////////////////////////////////////////////
+      })
+      .catch(function (error) {
+        // handle error
+      })
+      .then(function () {
+        // always executed
+      });
   };
 
   const connectWallet = async () => {
@@ -131,20 +221,57 @@ export const ContractProvider = ({ children }) => {
     if (res) await loadBlockchainData();
   };
 
-  const initiateToken = (tokenId, gender) => {
+  const initiateToken = (tokenId, gender, classIndex) => {
     if (stakingPool === null) {
       showMessage("Operation Failed: Initiate Token", "error");
       return;
     }
+
+    apeToken.methods
+      .isApprovedForAll(account, stakingPool._address)
+      .call()
+      .then((data) => {
+        if (!data) {
+          apeToken.methods
+            .setApprovalForAll(stakingPool._address, true)
+            .send({ from: account })
+            .then("receipt", (receipt) => {});
+        }
+      });
+
     stakingPool.methods
       .initiate([tokenId], gender)
       .send({ from: account })
       .then((data) => {
         axios
-          .put(API_URL + "/initiateToken", { tokenId, chainId: CHAIN_ID })
+          .put(API_URL + "/initiateToken", {
+            tokenId,
+            classIndex,
+            chainId: CHAIN_ID,
+          })
           .then((data) => console.log(data));
       })
       .catch((err) => console.log(err));
+
+    // initiate Max Babies if female
+    if (gender === 1) {
+      const maxBabies = classIndex === 3 ? 6 : classIndex === 2 ? 4 : 2;
+      stakingPool.methods
+        .initiateMaxBabies([tokenId], [maxBabies])
+        .send({ from: account })
+        .then((data) => {})
+        .catch((err) => console.log(err));
+    }
+
+    // initiate Multiplier if male
+    if (gender === 2) {
+      const multiplier = classIndex === 3 ? 4 : classIndex === 2 ? 3 : 2;
+      stakingPool.methods
+        .initiateMultipliers([tokenId], [multiplier])
+        .send({ from: account })
+        .then((data) => {})
+        .catch((err) => console.log(err));
+    }
   };
 
   const initiateBaby = (motherId, babyId) => {
@@ -215,6 +342,8 @@ export const ContractProvider = ({ children }) => {
     setInitiateTokens,
     initiatedBabyCount,
     setInitiatedBabyCount,
+    tokens,
+    setTokens
   };
 
   return (
