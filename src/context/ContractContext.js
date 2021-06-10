@@ -151,7 +151,7 @@ export const ContractProvider = ({ children }) => {
                 if (ids.includes(oneData["token_id"])) {
                   if (
                     oneData.hasOwnProperty("traits") &&
-                    oneData["traits"].hasOwnProperty("Gender")
+                    oneData["traits"].length !== 0
                   ) {
                     let traits = oneData.traits;
                     if (traits.length > 0) {
@@ -343,7 +343,7 @@ export const ContractProvider = ({ children }) => {
     initiatedBabyCount,
     setInitiatedBabyCount,
     tokens,
-    setTokens
+    setTokens,
   };
 
   return (
