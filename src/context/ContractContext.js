@@ -157,7 +157,7 @@ export const ContractProvider = ({ children }) => {
                     if (traits.length > 0) {
                       for (let i = 0; i < traits.length; i++) {
                         if (traits[i]["trait_type"] === "Gender") {
-                          switch (traits[i].oneData) {
+                          switch (traits[i].value) {
                             case "Male":
                               oneData["gender"] = 2;
                               break;
