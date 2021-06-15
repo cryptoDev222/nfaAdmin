@@ -8,7 +8,7 @@ export const ORDER_DIRS = {
 export const PAGE_SIZE = 5;
 
 // MAINNET API ADDRESS
-export const API_URL_BEFORE = "https://api.opensea.io/api/v1/assets?owner=0xF5999a22Cd26EB6739C17284a501BC4281610f11&offset="
+export const API_URL_BEFORE = "https://api.opensea.io/api/v1/assets?offset="
 export const API_URL_AFTER = "&order_direction=asc&limit=50&collection=nonfungibleapes"
 export const APETOKEN_ADDRESS = "0x495f947276749ce646f68ac8c248420045cb7b5e"
 export const STAKINGPOOL_ADDRESS = "0x5735f0c13ddeb10d824437ea01f706d756cdd011"
