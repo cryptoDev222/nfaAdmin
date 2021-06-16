@@ -1,6 +1,6 @@
 import React from 'react'
 import {Grid, useTheme} from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import NFAItem from "./NFAItem"
 import FemalesItem from "./FemalesItem"
 import Male from '../assets/male-gender.png'

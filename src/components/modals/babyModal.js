@@ -11,7 +11,7 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import axios from "axios";
 import { CHAIN_ID, API_URL } from "../../config/constants";
 

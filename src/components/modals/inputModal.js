@@ -8,7 +8,7 @@ import {
   TextField,
   useMediaQuery,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const InputModal = ({ isOpen, handleClose, confirmAction, title, desc }) => {
   const responsiveTheme = useTheme();

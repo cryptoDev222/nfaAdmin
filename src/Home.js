@@ -13,7 +13,7 @@ import {
   TableCell,
   TableFooter,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Male from "./assets/male-gender.png";
 import Female from "./assets/female-sign.png";
 import BabyCyan from "./assets/toddler.png";
