@@ -3,7 +3,7 @@ import { Link, Typography } from '@material-ui/core'
 const Logo = () => {
 	return (
 		<Link href="/admin">
-			<Typography variant="h2">
+			<Typography variant="h4">
 				NFA Admin
 			</Typography>
 		</Link>

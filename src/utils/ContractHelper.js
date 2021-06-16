@@ -15,8 +15,6 @@ const ContractHelper = () => {
   } = useContext(ContractContext);
 
   useEffect(() => {
-    connectWallet();
-
     const params = { chainId: CHAIN_ID };
 
     axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
