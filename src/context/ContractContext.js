@@ -12,7 +12,7 @@ import {
 } from "../config/constants";
 
 import Apetoken from "../abis/ApeToken.json";
-import Stakingpool from "../abis/StakingPool.json";
+import Stakingpool from "../abis/StakingPoolNew.json";
 
 export const ContractContext = createContext({
   connectWallet: () => {},
@@ -239,25 +239,11 @@ export const ContractProvider = ({ children }) => {
         }
       });
 
-    stakingPool.methods
-      .initiate([tokenId], gender)
-      .send({ from: account })
-      .then((data) => {
-        axios
-          .put(API_URL + "/initiateToken", {
-            tokenId,
-            classIndex,
-            chainId: CHAIN_ID,
-          })
-          .then((data) => console.log(data));
-      })
-      .catch((err) => console.log(err));
-
     // initiate Max Babies if female
     if (gender === 1) {
       const maxBabies = classIndex === 3 ? 6 : classIndex === 2 ? 4 : 2;
       stakingPool.methods
-        .initiateMaxBabies([tokenId], [maxBabies])
+        .initiateFemale([tokenId], [maxBabies])
         .send({ from: account })
         .then((data) => {})
         .catch((err) => console.log(err));
@@ -267,7 +253,15 @@ export const ContractProvider = ({ children }) => {
     if (gender === 2) {
       const multiplier = classIndex === 3 ? 4 : classIndex === 2 ? 3 : 2;
       stakingPool.methods
-        .initiateMultipliers([tokenId], [multiplier])
+        .initiateMale([tokenId], [multiplier])
+        .send({ from: account })
+        .then((data) => {})
+        .catch((err) => console.log(err));
+    }
+
+    if (gender === 3) {
+      stakingPool.methods
+        .initiateBaby([tokenId])
         .send({ from: account })
         .then((data) => {})
         .catch((err) => console.log(err));
@@ -283,15 +277,7 @@ export const ContractProvider = ({ children }) => {
     stakingPool.methods
       .initiateBabies([motherId], [babyId])
       .send({ from: account })
-      .then((data) => {
-        axios
-          .put(API_URL + "/initiateBaby", {
-            motherId,
-            babyId,
-            chainId: CHAIN_ID,
-          })
-          .then((data) => console.log(data));
-      })
+      .then((data) => {})
       .catch((err) => console.log(err));
   };
 
