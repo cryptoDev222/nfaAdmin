@@ -174,17 +174,17 @@ export const ContractProvider = ({ children }) => {
                     oneData["gender"] = (oneData["id"] % 3) + 1; // for RINKEBY
                   }
 
-                  addData.push({
-                    name: oneData["name"],
-                    token_id: oneData["token_id"],
-                    gender: oneData["gender"],
-                    traits: oneData["traits"].length,
-                    chainId: window.ethereum.chainId,
-                  });
+                  if(oneData.hasOwnProperty("gender")) {
+                    addData.push({
+                      name: oneData["name"],
+                      token_id: oneData["token_id"],
+                      gender: oneData["gender"],
+                      traits: oneData["traits"].length,
+                      chainId: window.ethereum.chainId,
+                    });
+                  }
                 }
               });
-
-              console.log(addData);
 
               axios
                 .post(API_URL + "createtokens", { addData, account })
