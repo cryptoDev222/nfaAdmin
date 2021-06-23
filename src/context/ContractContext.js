@@ -174,7 +174,7 @@ export const ContractProvider = ({ children }) => {
                     oneData["gender"] = (oneData["id"] % 3) + 1; // for RINKEBY
                   }
 
-                  if(oneData.hasOwnProperty("gender")) {
+                  if(oneData.hasOwnProperty("gender") && oneData['gender'] != null) {
                     addData.push({
                       name: oneData["name"],
                       token_id: oneData["token_id"],
