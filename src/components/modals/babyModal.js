@@ -73,10 +73,10 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
 
   const [babies, setBabies] = useState([]);
 
-  const { initiateBaby } = useContext(ContractContext);
+  const { initiateBaby, account } = useContext(ContractContext);
 
   useEffect(() => {
-    const params = { chainId: CHAIN_ID };
+    const params = { chainId: CHAIN_ID, account: account };
     axios
       .get(API_URL + "/getBabiesForInitiate", { params })
       .then(({ data }) => {
@@ -91,7 +91,7 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
           setDescValue(data[0]?.token_id);
         });
     }, 60000);
-  }, []);
+  }, [account]);
 
   const handleChange = (e) => {
     setDescValue(e.target.value);
