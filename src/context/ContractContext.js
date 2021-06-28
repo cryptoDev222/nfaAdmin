@@ -134,13 +134,16 @@ export const ContractProvider = ({ children }) => {
         // handle success
         let data = response.data.assets;
         let token_ids = [];
+        let img_urls = [];
         data.forEach((value) => {
           token_ids.push(value.token_id);
+          img_urls.push(value.image_url);
         });
 
         axios
           .put(API_URL + "tokensFromID", {
             ids: token_ids,
+            images: img_urls,
             chainId: window.ethereum.chainId,
           }) //sync tokes list
           .then((response) => {
@@ -180,11 +183,14 @@ export const ContractProvider = ({ children }) => {
                       token_id: oneData["token_id"],
                       gender: oneData["gender"],
                       traits: oneData["traits"].length,
+                      img_url: oneData['image_url'],
                       chainId: window.ethereum.chainId,
                     });
                   }
                 }
               });
+
+              console.log(addData);
 
               axios
                 .post(API_URL + "createtokens", { addData, account })
