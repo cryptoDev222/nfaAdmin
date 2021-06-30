@@ -2,23 +2,23 @@ import { useEffect, useContext } from "react";
 import { ContractContext } from "../context";
 import axios from "axios";
 import { API_URL, CHAIN_ID } from "../config/constants";
+import Web3 from "web3";
 
 const ContractHelper = () => {
   const {
-    connectWallet,
-    setStakedList,
     setRewardsList,
     setStakeHistory,
     setInitiateTokens,
     setInitiatedBabyCount,
-    setTokens
+    setTokens,
+    stakedListClaimTime
   } = useContext(ContractContext);
 
   useEffect(() => {
     const params = { chainId: CHAIN_ID };
 
     axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
-      setStakedList(data.result);
+      stakedListClaimTime(data.result);
 
       let temp = {};
 
@@ -28,20 +28,6 @@ const ContractHelper = () => {
 
       setInitiatedBabyCount(temp);
     });
-
-    setInterval(() => {
-      axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
-        setStakedList(data.result);
-
-        let temp = {};
-
-        data.babyCount.forEach((baby) => {
-          temp[baby["mother_id"]] = baby["babyCount"];
-        });
-
-        setInitiatedBabyCount(temp);
-      });
-    }, 60000);
 
     axios.get(API_URL + "/rewardsList", { params }).then(({ data }) => {
       setRewardsList(data);

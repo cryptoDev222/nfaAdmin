@@ -115,6 +115,55 @@ export const ContractProvider = ({ children }) => {
     try {
       const pool = new web3.eth.Contract(Stakingpool, STAKINGPOOL_ADDRESS);
       setStakingPool(pool);
+
+      let apes = stakedList;
+      apes = apes.map((ape) => {
+        if (ape.gender === 1) {
+          pool.methods
+            .breedingEnd(ape.token_id)
+            .call()
+            .then((data) => {
+              ape["breedingEnd"] = data * 1000;
+              return ape;
+            });
+        }
+        return ape;
+      });
+
+      setStakedList(apes);
+
+      const params = { chainId: CHAIN_ID };
+      setInterval(async () => {
+        axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
+          apes = data.result;
+
+          let results = [];
+
+          const forLoop = async _ => {
+            for(let i=0;i<apes.length;i++) {
+              let ape = apes[i]
+              if (ape.gender === 1) {
+                ape["breedingEnd"] = await pool.methods
+                  .breedingEnd(ape.token_id)
+                  .call() * 1000;
+              }
+              results.push(ape);
+            }
+  
+            setStakedList(apes);  
+          }
+
+          forLoop();
+          
+          let temp = {};
+
+          data.babyCount.forEach((baby) => {
+            temp[baby["mother_id"]] = baby["babyCount"];
+          });
+
+          setInitiatedBabyCount(temp);
+        });
+      }, 6000);
     } catch (err) {
       console.log(err);
       setStakingPool(null);
@@ -177,13 +226,16 @@ export const ContractProvider = ({ children }) => {
                     oneData["gender"] = (oneData["id"] % 3) + 1; // for RINKEBY
                   }
 
-                  if(oneData.hasOwnProperty("gender") && oneData['gender'] != null) {
+                  if (
+                    oneData.hasOwnProperty("gender") &&
+                    oneData["gender"] != null
+                  ) {
                     addData.push({
                       name: oneData["name"],
                       token_id: oneData["token_id"],
                       gender: oneData["gender"],
                       traits: oneData["traits"].length,
-                      img_url: oneData['image_url'],
+                      img_url: oneData["image_url"],
                       chainId: window.ethereum.chainId,
                     });
                   }
@@ -315,6 +367,10 @@ export const ContractProvider = ({ children }) => {
       });
   };
 
+  const stakedListClaimTime = (apes) => {
+    setStakedList(apes);
+  };
+
   const contextValue = {
     account,
     apeToken,
@@ -336,6 +392,7 @@ export const ContractProvider = ({ children }) => {
     setInitiatedBabyCount,
     tokens,
     setTokens,
+    stakedListClaimTime,
   };
 
   return (

@@ -22,6 +22,16 @@ const Staking = () => {
 
   const { stakedList, initiatedBabyCount } = useContext(ContractContext);
 
+  const DateParser = (date) => {
+      var mm = date.getMonth() + 1; // getMonth() is zero-based
+      var dd = date.getDate();
+    
+      return [date.getFullYear(),
+              (mm>9 ? '' : '0') + mm,
+              (dd>9 ? '' : '0') + dd
+             ].join('-');
+  }
+
   // Initiate Baby Action part//
   const [isBabyModal, setBabyModal] = useState(false);
   const [motherID, setMotherID] = useState(null);
@@ -53,6 +63,7 @@ const Staking = () => {
                   <TableCell align="left">Gender</TableCell>
                   <TableCell align="center">Baby Count</TableCell>
                   <TableCell align="center">Initiated Baby Count</TableCell>
+                  <TableCell align="center">Claim Date</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -80,6 +91,11 @@ const Staking = () => {
                         ? initiatedBabyCount[data["token_id"]]
                         : 0}
                     </TableCell>
+                    <TableCell align="center" className={classes.accountName}>
+                      {data.hasOwnProperty("breedingEnd") && data["breedingEnd"] !== 0
+                        ? DateParser(new Date(data["breedingEnd"]))
+                        : ""}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"
@@ -94,7 +110,7 @@ const Staking = () => {
                   </TableRow>
                 ))}
                 {stakedList.length === 0 ? (
-                  <TableCell colSpan={6} align="center">
+                  <TableCell colSpan={7} align="center">
                     There is no items on staking.
                   </TableCell>
                 ) : (
