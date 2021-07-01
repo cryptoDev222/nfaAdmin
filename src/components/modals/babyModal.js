@@ -126,7 +126,7 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
             >
               {babies.map((baby, index) => (
                 <MenuItem key={index} value={baby["token_id"]}>
-                  {baby["token_id"]}
+                  {baby["name"] ? baby["name"] : "NFA #" + baby["token_id"]}
                 </MenuItem>
               ))}
             </Select>

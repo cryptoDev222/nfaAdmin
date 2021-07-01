@@ -261,7 +261,9 @@ const Home = () => {
                         {data["account_id"]}
                       </TableCell>
                       <TableCell align="left" className={classes.accountName}>
-                        {data["token_id"]}
+                        {data["name"]
+                          ? data["name"]
+                          : "NFA #" + data["token_id"]}
                       </TableCell>
                       <TableCell align="left" className={classes.accountName}>
                         {data["gender"] === 1
@@ -423,7 +425,7 @@ const Home = () => {
                       {data["account_id"]}
                     </TableCell>
                     <TableCell align="left" className={classes.accountName}>
-                      {data["token_id"]}
+                      {data["name"] !== '' ? data["name"] : "NFA #" + data["token_id"]}
                     </TableCell>
                     <TableCell align="center" className={classes.accountName}>
                       {data["gender"] === 1

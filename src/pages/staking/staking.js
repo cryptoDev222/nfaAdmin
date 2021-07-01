@@ -23,14 +23,15 @@ const Staking = () => {
   const { stakedList, initiatedBabyCount } = useContext(ContractContext);
 
   const DateParser = (date) => {
-      var mm = date.getMonth() + 1; // getMonth() is zero-based
-      var dd = date.getDate();
-    
-      return [date.getFullYear(),
-              (mm>9 ? '' : '0') + mm,
-              (dd>9 ? '' : '0') + dd
-             ].join('-');
-  }
+    var mm = date.getMonth() + 1; // getMonth() is zero-based
+    var dd = date.getDate();
+
+    return [
+      date.getFullYear(),
+      (mm > 9 ? "" : "0") + mm,
+      (dd > 9 ? "" : "0") + dd,
+    ].join("-");
+  };
 
   // Initiate Baby Action part//
   const [isBabyModal, setBabyModal] = useState(false);
@@ -74,7 +75,9 @@ const Staking = () => {
                       {data["account_id"]}
                     </TableCell>
                     <TableCell align="left" className={classes.accountName}>
-                      {data["token_id"]}
+                      {data["name"] !== ""
+                        ? data["name"]
+                        : "NFA #" + data["token_id"]}
                     </TableCell>
                     <TableCell align="left" className={classes.accountName}>
                       {data["gender"] === 1
@@ -92,7 +95,8 @@ const Staking = () => {
                         : 0}
                     </TableCell>
                     <TableCell align="center" className={classes.accountName}>
-                      {data.hasOwnProperty("breedingEnd") && data["breedingEnd"] !== 0
+                      {data.hasOwnProperty("breedingEnd") &&
+                      data["breedingEnd"] !== 0
                         ? DateParser(new Date(data["breedingEnd"]))
                         : ""}
                     </TableCell>
