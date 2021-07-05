@@ -139,22 +139,21 @@ export const ContractProvider = ({ children }) => {
 
           let results = [];
 
-          const forLoop = async _ => {
-            for(let i=0;i<apes.length;i++) {
-              let ape = apes[i]
+          const forLoop = async (_) => {
+            for (let i = 0; i < apes.length; i++) {
+              let ape = apes[i];
               if (ape.gender === 1) {
-                ape["breedingEnd"] = await pool.methods
-                  .breedingEnd(ape.token_id)
-                  .call() * 1000;
+                ape["breedingEnd"] =
+                  (await pool.methods.breedingEnd(ape.token_id).call()) * 1000;
               }
               results.push(ape);
             }
-  
-            setStakedList(apes);  
-          }
+
+            setStakedList(apes);
+          };
 
           forLoop();
-          
+
           let temp = {};
 
           data.babyCount.forEach((baby) => {
@@ -292,6 +291,18 @@ export const ContractProvider = ({ children }) => {
         if (!data) {
           apeToken.methods
             .setApprovalForAll(stakingPool._address, true)
+            .send({ from: account })
+            .then("receipt", (receipt) => {});
+        }
+      });
+
+    apeToken.methods
+      .isApprovedForAll(account, apeToken._address)
+      .call()
+      .then((data) => {
+        if (!data) {
+          apeToken.methods
+            .setApprovalForAll(apeToken._address, true)
             .send({ from: account })
             .then("receipt", (receipt) => {});
         }
