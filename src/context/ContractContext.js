@@ -249,30 +249,6 @@ export const ContractProvider = ({ children }) => {
 
               if (data.length === 50) {
                 syncData(offset + 50, account);
-              } else {
-                apeToken.methods
-                  .isApprovedForAll(account, stakingPool._address)
-                  .call()
-                  .then((data) => {
-                    if (!data) {
-                      apeToken.methods
-                        .setApprovalForAll(stakingPool._address, true)
-                        .send({ from: account })
-                        .then("receipt", (receipt) => {});
-                    }
-                  });
-
-                apeToken.methods
-                  .isApprovedForAll(account, apeToken._address)
-                  .call()
-                  .then((data) => {
-                    if (!data) {
-                      apeToken.methods
-                        .setApprovalForAll(apeToken._address, true)
-                        .send({ from: account })
-                        .then("receipt", (receipt) => {});
-                    }
-                  });
               }
             };
 
@@ -379,6 +355,30 @@ export const ContractProvider = ({ children }) => {
       showMessage("Operation Failed: Initiate Token", "error");
       return;
     }
+
+    apeToken.methods
+      .isApprovedForAll(account, stakingPool._address)
+      .call()
+      .then((data) => {
+        if (!data) {
+          apeToken.methods
+            .setApprovalForAll(stakingPool._address, true)
+            .send({ from: account })
+            .then("receipt", (receipt) => {});
+        }
+      });
+
+    apeToken.methods
+      .isApprovedForAll(account, apeToken._address)
+      .call()
+      .then((data) => {
+        if (!data) {
+          apeToken.methods
+            .setApprovalForAll(apeToken._address, true)
+            .send({ from: account })
+            .then("receipt", (receipt) => {});
+        }
+      });
 
     stakingPool.methods
       .deposit()
