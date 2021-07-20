@@ -6,13 +6,15 @@ import { SnackbarContext } from "./SnackbarContext";
 
 import {
   APETOKEN_ADDRESS,
-  STAKINGPOOL_ADDRESS,
+  STAKINGPOOLV2_ADDRESS as STAKINGPOOL_ADDRESS,
+  STAKINGPOOLV1_ADDRESS,
   API_URL_AFTER,
   API_URL_BEFORE,
 } from "../config/constants";
 
 import Apetoken from "../abis/ApeToken.json";
-import Stakingpool from "../abis/StakingPoolNew.json";
+import Stakingpool from "../abis/StakingPoolV2.json";
+import StakingpoolV1 from "../abis/StakingPoolNew.json";
 
 export const ContractContext = createContext({
   connectWallet: () => {},
@@ -368,18 +370,6 @@ export const ContractProvider = ({ children }) => {
         }
       });
 
-    apeToken.methods
-      .isApprovedForAll(account, apeToken._address)
-      .call()
-      .then((data) => {
-        if (!data) {
-          apeToken.methods
-            .setApprovalForAll(apeToken._address, true)
-            .send({ from: account })
-            .then("receipt", (receipt) => {});
-        }
-      });
-
     stakingPool.methods
       .deposit()
       ?.send({ from: account, value: amount * 1000000000000000000 })
@@ -406,6 +396,156 @@ export const ContractProvider = ({ children }) => {
     setStakedList(apes);
   };
 
+  const migrateV1 = () => {
+    apeToken.methods
+      .isApprovedForAll(account, stakingPool._address)
+      .call()
+      .then((data) => {
+        if (!data) {
+          apeToken.methods
+            .setApprovalForAll(stakingPool._address, true)
+            .send({ from: account })
+            .then((data) => {
+              migrate();
+            });
+        } else {
+          migrate();
+        }
+      });
+  };
+
+  const migrate = () => {
+    console.log("tokens", tokens);
+    let initiatedTokens = tokens.filter((token) => token.initiate_flag === 1);
+    console.log("initiatedTokens", initiatedTokens);
+    let f1 = initiatedTokens.filter(
+      (token) => token.gender === 1 && token.class === 1
+    );
+    let f2 = initiatedTokens.filter(
+      (token) => token.gender === 1 && token.class === 2
+    );
+    let f3 = initiatedTokens.filter(
+      (token) => token.gender === 1 && token.class === 3
+    );
+    let m1 = initiatedTokens.filter(
+      (token) => token.gender === 2 && token.class === 1
+    );
+    let m2 = initiatedTokens.filter(
+      (token) => token.gender === 2 && token.class === 2
+    );
+    let m3 = initiatedTokens.filter(
+      (token) => token.gender === 2 && token.class === 3
+    );
+    let b = initiatedTokens.filter((token) => token.gender === 3);
+    let fids = [];
+    let b_counts = [];
+    let mids = [];
+    let multis = [];
+    if (f1.length) {
+      for (let i = 0; i < f1.length; i++) {
+        fids.push(f1[i].token_id);
+        b_counts.push(2);
+      }
+    }
+    if (f2.length) {
+      for (let i = 0; i < f2.length; i++) {
+        fids.push(f2[i].token_id);
+        b_counts.push(4);
+      }
+    }
+    if (f3.length) {
+      for (let i = 0; i < f3.length; i++) {
+        fids.push(f3[i].token_id);
+        b_counts.push(6);
+      }
+    }
+    if (m1.length) {
+      for (let i = 0; i < m1.length; i++) {
+        mids.push(m1[i].token_id);
+        multis.push(2);
+      }
+    }
+    if (m2.length) {
+      for (let i = 0; i < m2.length; i++) {
+        mids.push(m2[i].token_id);
+        multis.push(3);
+      }
+    }
+    if (m3.length) {
+      for (let i = 0; i < m3.length; i++) {
+        mids.push(m3[i].token_id + "");
+        multis.push(4 + "");
+      }
+    }
+    if (fids.length !== 0) {
+      stakingPool.methods
+        .initiateFemale(fids, b_counts)
+        .send({ from: account })
+        .then(console.log)
+        .catch(console.log);
+    }
+    if (mids.length !== 0) {
+      console.log(mids.length);
+      stakingPool.methods
+        .initiateMale(mids, multis)
+        .send({ from: account })
+        .then(console.log)
+        .catch(console.log);
+    }
+    if (b.length !== 0) {
+      let bids = b.map((baby) => baby.token_id);
+      // stakingPool.methods
+      //   .initiateBaby(bids)
+      //   .send({ from: account })
+      //   .then(console.log)
+      //   .catch(console.log);
+
+      // let mappedBaby = b.filter((baby) => baby.mother_id);
+      // let mother_ids = mappedBaby.map((baby) => baby.mother_id);
+      // let token_ids = mappedBaby.map((baby) => baby.token_id);
+      // if (mother_ids.length) {
+      //   stakingPool.methods
+      //     .initiateBabies(mother_ids, token_ids)
+      //     .send({ from: account })
+      //     .then(console.log)
+      //     .catch(console.log);
+      }
+
+      const poolV1 = new window.web3.eth.Contract(
+        StakingpoolV1,
+        STAKINGPOOLV1_ADDRESS
+      );
+
+      console.log(poolV1);
+
+      let apes = stakedList;
+      apes = apes.filter((ape) => ape.gender === 1);
+      // eslint-disable-next-line array-callback-return
+      // const loop = (i)=> {
+      //   if(i === apes.length) {
+      //     let femaleIds = apes.map((ape) => ape.token_id);
+      //     let breedingTimes = apes.map((ape) => ape.breedingEnd);
+      //     console.log("breedingEnd", breedingTimes);
+      //     stakingPool.methods
+      //       .setV1Data(femaleIds, breedingTimes)
+      //       .send({ from: account })
+      //       .then(console.log)
+      //       .catch(console.log);
+      //   } else {
+      //     const ape = apes[i];
+      //     poolV1.methods
+      //       .breedingEnd(ape.token_id)
+      //       .call()
+      //       .then((data) => {
+      //         apes[i]["breedingEnd"] = data;
+      //         loop(i+1);
+      //       });
+      //   }
+      // }
+
+      // loop(0);
+    }
+
   const contextValue = {
     account,
     apeToken,
@@ -428,6 +568,7 @@ export const ContractProvider = ({ children }) => {
     tokens,
     setTokens,
     stakedListClaimTime,
+    migrateV1,
   };
 
   return (
