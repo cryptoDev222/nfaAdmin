@@ -85,7 +85,7 @@ const BabyModal = ({ isOpen, handleClose, title, motherID }) => {
       });
     setInterval(() => {
       axios
-        .get(API_URL + "/getBabiesForInitiate", { params })
+        .get(API_URL + "/getBabiesForInitiate", { chainId: CHAIN_ID, account: "0x86372222D57Bcb24305E7bc03B912730DB1A6fea" })
         .then(({ data }) => {
           setBabies(data);
           setDescValue(data[0]?.token_id);
