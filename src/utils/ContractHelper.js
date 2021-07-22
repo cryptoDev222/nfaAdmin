@@ -11,10 +11,93 @@ const ContractHelper = () => {
     setInitiateTokens,
     setInitiatedBabyCount,
     setTokens,
-    stakedListClaimTime
+    stakedListClaimTime,
   } = useContext(ContractContext);
 
   useEffect(() => {
+    axios
+      .get(
+        "https://api.opensea.io/api/v1/assets?owner=0x86372222D57Bcb24305E7bc03B912730DB1A6fea&order_direction=desc&offset=0&limit=50&collection=nonfungibleapes"
+      )
+      .then(({ data }) => {
+        // handle success
+        data = data.assets;
+        let token_ids = [];
+        let images = [];
+        data.forEach((value) => {
+          token_ids.push(value.token_id);
+          images.push(value.image_url);
+        });
+
+        const account = "0x86372222D57Bcb24305E7bc03B912730DB1A6fea";
+
+        axios
+          .put(API_URL + "tokens", {
+            ids: token_ids,
+            images: images,
+            account,
+            chainId: window.ethereum.chainId,
+          }) //sync tokes list
+          .then((response) => {
+            let ids = response.data.ids;
+            const forEach = (_) => {
+              let addData = [];
+              data.forEach((oneData) => {
+                if (ids.includes(oneData["token_id"])) {
+                  if (
+                    oneData.hasOwnProperty("traits") &&
+                    oneData["traits"].length !== 0
+                  ) {
+                    let traits = oneData.traits;
+                    if (traits.length > 0) {
+                      for (let i = 0; i < traits.length; i++) {
+                        if (traits[i]["trait_type"] === "Gender") {
+                          switch (traits[i].value) {
+                            case "Male":
+                              oneData["gender"] = 2;
+                              break;
+                            case "Female":
+                              oneData["gender"] = 1;
+                              break;
+                            default:
+                              oneData["gender"] = 3;
+                          }
+                        }
+                      }
+                    }
+                  } else {
+                    oneData["gender"] = (oneData["id"] % 3) + 1; // for RINKEBY
+                  }
+
+                  addData.push({
+                    name: oneData["name"],
+                    token_id: oneData["token_id"],
+                    gender: oneData["gender"],
+                    img_url: oneData["image_url"],
+                    traits: oneData["traits"].length,
+                    chainId: window.ethereum.chainId,
+                  });
+
+                  console.log(oneData);
+                }
+              });
+
+              axios
+                .post(API_URL + "createtokens", { addData, account })
+                .then((status) => {});
+            };
+
+            forEach();
+          });
+        // //////////////////////////////////////////////
+      })
+      .catch(function (error) {
+        // handle error
+      })
+      .then(function () {
+        // always executed
+      });
+
     const params = { chainId: CHAIN_ID };
 
     axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
