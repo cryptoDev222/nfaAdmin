@@ -326,7 +326,10 @@ const Home = () => {
                       {data["baby_count"]}
                     </TableCell>
                     <TableCell align="center" className={classes.accountName}>
-                      {(data["eth_amount"] / Math.pow(10, 18) + "").slice(0, 6)}{" "}
+                      {(
+                        data["eth_amount"] / Math.pow(10, 18) / 105.264 +
+                        ""
+                      ).slice(0, 6)}{" "}
                       ETH
                     </TableCell>
                   </TableRow>
@@ -425,7 +428,9 @@ const Home = () => {
                       {data["account_id"]}
                     </TableCell>
                     <TableCell align="left" className={classes.accountName}>
-                      {data["name"] !== '' ? data["name"] : "NFA #" + data["token_id"]}
+                      {data["name"] !== ""
+                        ? data["name"]
+                        : "NFA #" + data["token_id"]}
                     </TableCell>
                     <TableCell align="center" className={classes.accountName}>
                       {data["gender"] === 1
