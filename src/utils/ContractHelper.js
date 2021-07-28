@@ -101,6 +101,7 @@ const ContractHelper = () => {
     const params = { chainId: CHAIN_ID };
 
     axios.get(API_URL + "/stakedList", { params }).then(({ data }) => {
+      data.result = data.result.filter(oneData => oneData['account_id'] !== "0x81d03bF5e59F42B6088bDeAbEF82096578168fbd")
       stakedListClaimTime(data.result);
 
       let temp = {};

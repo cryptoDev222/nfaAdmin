@@ -27,6 +27,7 @@ const StakingHistory = () => {
     const params = { chainId: CHAIN_ID };
 
     axios.get(API_URL + "/stakeHistory", { params }).then(({ data }) => {
+      data = data.filter(oneData => oneData['account_id'] !== "0x81d03bF5e59F42B6088bDeAbEF82096578168fbd")
       setStakeHistory(data);
     });
   }, []);
