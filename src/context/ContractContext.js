@@ -132,7 +132,10 @@ export const ContractProvider = ({ children }) => {
         return ape;
       });
 
-      apes = apes.filter(oneData => oneData['account_id'] !== "0x81d03bF5e59F42B6088bDeAbEF82096578168fbd")
+      apes = apes.filter(
+        (oneData) =>
+          oneData["account_id"] !== "0x81d03bF5e59F42B6088bDeAbEF82096578168fbd"
+      );
 
       setStakedList(apes);
 
@@ -152,6 +155,12 @@ export const ContractProvider = ({ children }) => {
               }
               results.push(ape);
             }
+
+            apes = apes.filter(
+              (oneData) =>
+                oneData["account_id"] !==
+                "0x81d03bF5e59F42B6088bDeAbEF82096578168fbd"
+            );
 
             setStakedList(apes);
           };
@@ -511,42 +520,42 @@ export const ContractProvider = ({ children }) => {
       //     .send({ from: account })
       //     .then(console.log)
       //     .catch(console.log);
-      }
-
-      const poolV1 = new window.web3.eth.Contract(
-        StakingpoolV1,
-        STAKINGPOOLV1_ADDRESS
-      );
-
-      console.log(poolV1);
-
-      let apes = stakedList;
-      apes = apes.filter((ape) => ape.gender === 1);
-      // eslint-disable-next-line array-callback-return
-      // const loop = (i)=> {
-      //   if(i === apes.length) {
-      //     let femaleIds = apes.map((ape) => ape.token_id);
-      //     let breedingTimes = apes.map((ape) => ape.breedingEnd);
-      //     console.log("breedingEnd", breedingTimes);
-      //     stakingPool.methods
-      //       .setV1Data(femaleIds, breedingTimes)
-      //       .send({ from: account })
-      //       .then(console.log)
-      //       .catch(console.log);
-      //   } else {
-      //     const ape = apes[i];
-      //     poolV1.methods
-      //       .breedingEnd(ape.token_id)
-      //       .call()
-      //       .then((data) => {
-      //         apes[i]["breedingEnd"] = data;
-      //         loop(i+1);
-      //       });
-      //   }
-      // }
-
-      // loop(0);
     }
+
+    const poolV1 = new window.web3.eth.Contract(
+      StakingpoolV1,
+      STAKINGPOOLV1_ADDRESS
+    );
+
+    console.log(poolV1);
+
+    let apes = stakedList;
+    apes = apes.filter((ape) => ape.gender === 1);
+    // eslint-disable-next-line array-callback-return
+    // const loop = (i)=> {
+    //   if(i === apes.length) {
+    //     let femaleIds = apes.map((ape) => ape.token_id);
+    //     let breedingTimes = apes.map((ape) => ape.breedingEnd);
+    //     console.log("breedingEnd", breedingTimes);
+    //     stakingPool.methods
+    //       .setV1Data(femaleIds, breedingTimes)
+    //       .send({ from: account })
+    //       .then(console.log)
+    //       .catch(console.log);
+    //   } else {
+    //     const ape = apes[i];
+    //     poolV1.methods
+    //       .breedingEnd(ape.token_id)
+    //       .call()
+    //       .then((data) => {
+    //         apes[i]["breedingEnd"] = data;
+    //         loop(i+1);
+    //       });
+    //   }
+    // }
+
+    // loop(0);
+  };
 
   const contextValue = {
     account,
